@@ -1,0 +1,15 @@
+[2026-05-12 23:06:16.931] AIDevOps extension v2026.417.1749 activated
+[2026-05-12 23:06:16.932] [mcp-config] mcp.json not found at c:\AdroBioFarmVitrineWebsite\.vscode\mcp.json
+[2026-05-12 23:06:16.932] Discovered 0 AIDevOps server(s): (none)
+[2026-05-12 23:06:16.932] NuGet sources: msazure.pkgs.visualstudio.com/One/_packaging/AIDevOps/nuget/v3/index.json
+[2026-05-12 23:06:16.932] [watcher] Started (interval=1800s, 1 source(s), 0 known server(s))
+[2026-05-12 23:06:16.932] [watcher] Known servers: (none)
+[2026-05-12 23:06:16.932] [watcher] Feed sources: https://msazure.pkgs.visualstudio.com/One/_packaging/AIDevOps/nuget/v3/index.json
+[2026-05-12 23:06:16.932] AG-UI subscriber initialized (MAF-driven execution)
+[2026-05-12 23:06:17.057] [WorkflowServer] Preferred port 5963 is available
+[2026-05-12 23:06:17.057] [WorkflowServer] Port resolved: 5800 → 5963 (hash of "c:\AdroBioFarmVitrineWebsite" → preferred 5963)
+[2026-05-12 23:06:17.083] [WorkflowServer] Not running — attempting auto-start...
+[2026-05-12 23:06:17.084] [WorkflowServer] End-user mode — starting via dnx (NuGet package)
+[2026-05-12 23:06:17.085] [WorkflowServer] 'dnx' not found on PATH — attempting auto-install...
+[2026-05-12 23:06:17.128] [WorkflowServer] Auto-install of 'dnx' failed
+[2026-05-12 23:06:17.128] [WorkflowServer] 'dnx' command not available after auto-install attempt
