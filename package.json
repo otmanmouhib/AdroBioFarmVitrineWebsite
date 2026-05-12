@@ -2,6 +2,10 @@
   "name": "adro-bio-farm-website",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10",
+  "engines": {
+    "node": "18.x || 20.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
