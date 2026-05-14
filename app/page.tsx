@@ -16,38 +16,48 @@ export default function HomePage() {
       </section>
 
       <section className="section highlight">
-        <div className="container homeGrid">
-          <article>
-            <h2>Produits naturels</h2>
-            <p>Œufs, volailles, petits animaux, fruits et légumes cultivés avec soin et respect de la terre.</p>
-          </article>
-          <article>
-            <h2>Services durables</h2>
-            <p>Hydroponie, aquaponie, formations, hébergement et résidence artistique au service d'une démarche écologique.</p>
-          </article>
-          <article>
-            <h2>Expérience immersive</h2>
-            <p>Venez séjourner, apprendre sur place ou inviter votre groupe à découvrir les pratiques durables en direct.</p>
-          </article>
+        <div className="container">
+          <div className="homeGrid">
+            <article className="homeCard">
+              <span className="cardIcon">🌿</span>
+              <h2>Produits naturels</h2>
+              <p>Œufs, volailles, petits animaux, fruits et légumes cultivés avec soin et respect de la terre.</p>
+            </article>
+            <article className="homeCard">
+              <span className="cardIcon">💧</span>
+              <h2>Services durables</h2>
+              <p>Hydroponie, aquaponie, formations, hébergement et résidence artistique au service d'une démarche écologique.</p>
+            </article>
+            <article className="homeCard">
+              <span className="cardIcon">🏡</span>
+              <h2>Expérience immersive</h2>
+              <p>Venez séjourner, apprendre sur place ou inviter votre groupe à découvrir les pratiques durables en direct.</p>
+            </article>
+          </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <h2>Pourquoi choisir ADRO BIO FARM ?</h2>
-          <p>
-            Nous sommes une coopérative qui rassemble agriculture, pédagogie et créativité. Notre mission est de proposer des produits locaux, des systèmes innovants et des expériences enrichissantes pour les visiteurs, les artistes et les groupes.
-          </p>
+          <div className="sectionIntro">
+            <h2>Pourquoi choisir ADRO BIO FARM ?</h2>
+            <p className="sectionLead">
+              Nous sommes une coopérative qui rassemble agriculture, pédagogie et créativité. Notre mission est de proposer des produits locaux, des systèmes innovants et des expériences enrichissantes pour les visiteurs, les artistes et les groupes.
+            </p>
+          </div>
           <div className="featureList">
-            <div>
+            <div className="featureCard">
+              <span className="featureIcon">🥚</span>
               <h3>Produits fermiers</h3>
               <p>Des œufs, du poulet, des moutons, des cailles, des lapins et des légumes de saison cultivés en respectant la nature.</p>
             </div>
-            <div>
+            <div className="featureCard">
+              <span className="featureIcon">🌱</span>
               <h3>Formation</h3>
               <p>Stages et ateliers pour apprendre l'agriculture durable, la permaculture, l'hydroponie et l'aquaponie.</p>
             </div>
-            <div>
+            <div className="featureCard">
+              <span className="featureIcon">🛏️</span>
               <h3>Hébergement</h3>
               <p>Des séjours en immersion avec un accueil chaleureux et un environnement propice à la détente.</p>
             </div>
