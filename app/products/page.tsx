@@ -1,45 +1,58 @@
 import Link from 'next/link';
+import { poles } from '../../data/poles';
+import { products } from '../../data/products';
 
 export default function ProductsPage() {
+  const groupedProducts = poles
+    .map((pole) => ({
+      pole,
+      items: products.filter((product) => product.pole === pole.slug),
+    }))
+    .filter((group) => group.items.length > 0);
+
   return (
     <main>
       <section className="section hero">
         <div className="container heroContent">
           <p className="eyebrow">Nos produits</p>
-          <h1>Des produits fermiers et frais, cultivés avec soin</h1>
+          <h1>Des produits fermiers et végétaux au service d’une agriculture durable</h1>
           <p className="intro">
-            ADRO BIO FARM propose une sélection de produits locaux : œufs, volailles, petits animaux, fruits et légumes de saison, tous issus de pratiques responsables.
+            ADRO BIO FARM propose un catalogue de produits locaux, bio et saisonniers, structurés autour de nos principaux domaines métiers.
           </p>
           <Link href="/contact" className="button">Commander ou réserver</Link>
         </div>
       </section>
 
       <section className="section">
-        <div className="container contactGrid">
-          <div className="sectionCard">
-            <h2>Œufs et volailles</h2>
-            <p>Œufs bio, poulets, cailles et autres volailles élevés dans un environnement sain et naturel.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Petits animaux</h2>
-            <p>Lapins et moutons disponibles pour élevage local ou production directe, selon les commandes.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Fruits et légumes</h2>
-            <p>Produits de saison récoltés sur place, en plein champ ou en culture respectueuse de l'environnement.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Panier découverte</h2>
-            <p>Composez un panier ou demandez nos suggestions pour goûter le meilleur de la ferme.</p>
-          </div>
+        <div className="container">
+          {groupedProducts.map(({ pole, items }) => (
+            <div key={pole.slug} className="sectionBlock">
+              <div className="sectionIntro">
+                <span className="detailBadge">{pole.label}</span>
+                <h2>{pole.label}</h2>
+                <p>{pole.shortDescription}</p>
+              </div>
+              <div className="itemGrid">
+                {items.map((product) => (
+                  <article key={product.slug} className="itemCard">
+                    <h3>{product.title}</h3>
+                    <p>{product.shortDescription}</p>
+                    <Link href={`/products/${product.slug}`} className="button secondary">
+                      En savoir plus
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="section highlight">
+      <section className="section highlight contactCta">
         <div className="container">
-          <h2>Vous voulez en savoir plus ?</h2>
-          <p>Contactez-nous pour recevoir notre liste de produits disponible, connaître les tarifs et organiser une livraison ou un retrait à la ferme.</p>
-          <Link href="/contact" className="button secondary">Page contact</Link>
+          <h2>Prêt à commander ?</h2>
+          <p>Contactez-nous pour construire votre panier ou passer commande sur mesure.</p>
+          <Link href="/contact" className="button secondary">Contactez-nous</Link>
         </div>
       </section>
     </main>

@@ -1,48 +1,57 @@
 import Link from 'next/link';
+import { poles } from '../../data/poles';
+import { services } from '../../data/services';
 
 export default function ServicesPage() {
+  const groupedServices = poles
+    .map((pole) => ({
+      pole,
+      items: services.filter((service) => service.pole === pole.slug),
+    }))
+    .filter((group) => group.items.length > 0);
+
   return (
     <main>
       <section className="section hero">
         <div className="container heroContent">
           <p className="eyebrow">Nos services</p>
-          <h1>Solutions durables, formation et hébergement pour tous</h1>
+          <h1>Services sur mesure pour vos projets durables et pédagogiques</h1>
           <p className="intro">
-            Nous accompagnons les particuliers, les groupes et les artistes avec des services d'hydroponie, d'aquaponie, de formation, de séjour et de résidence artistique.
+            ADRO BIO FARM propose un catalogue de services structuré pour accompagner vos initiatives d’agriculture durable, d’hébergement, d’événementiel et de formation.
           </p>
           <Link href="/contact" className="button">Nous contacter</Link>
         </div>
       </section>
 
       <section className="section">
-        <div className="container contactGrid">
-          <div className="sectionCard">
-            <h2>Hydroponie</h2>
-            <p>Conception et vente de systèmes hydroponiques adaptés aux jardins urbains et aux fermes pédagogiques.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Aquaponie</h2>
-            <p>Solutions aquaponiques pour une production intégrée de poissons et de légumes, optimale pour l'autonomie alimentaire.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Formations</h2>
-            <p>Ateliers pour groupes et individuels sur l'environnement, l'écologie, la permaculture et le développement durable.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Hébergement</h2>
-            <p>Séjours immersifs à la ferme, hébergement confortable et découverte des pratiques agricoles naturelles.</p>
-          </div>
-          <div className="sectionCard">
-            <h2>Résidence artistique</h2>
-            <p>Accueil d'artistes et de musiciens pour créer, enregistrer et se ressourcer dans un environnement inspirant.</p>
-          </div>
+        <div className="container">
+          {groupedServices.map(({ pole, items }) => (
+            <div key={pole.slug} className="sectionBlock">
+              <div className="sectionIntro">
+                <span className="detailBadge">{pole.label}</span>
+                <h2>{pole.label}</h2>
+                <p>{pole.shortDescription}</p>
+              </div>
+              <div className="itemGrid">
+                {items.map((service) => (
+                  <article key={service.slug} className="itemCard">
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                    <Link href={`/services/${service.slug}`} className="button secondary">
+                      En savoir plus
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="section highlight">
+      <section className="section highlight contactCta">
         <div className="container">
-          <h2>Construisons ensemble votre projet</h2>
-          <p>Que vous recherchiez un système sur mesure, un atelier ou un séjour, nous adaptons nos services à votre besoin.</p>
+          <h2>Construisons votre projet ensemble</h2>
+          <p>Que vous cherchiez de l’accompagnement, un atelier, un séjour ou un événement, nous adaptons notre offre à vos besoins.</p>
           <Link href="/contact" className="button secondary">Contactez-nous</Link>
         </div>
       </section>

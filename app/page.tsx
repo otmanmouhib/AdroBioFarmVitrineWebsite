@@ -1,4 +1,12 @@
+import Link from 'next/link';
+import { poles } from '../data/poles';
+import { products } from '../data/products';
+import { services } from '../data/services';
+
 export default function HomePage() {
+  const featuredProducts = products.slice(0, 4);
+  const featuredServices = services.slice(0, 4);
+
   return (
     <main>
       <section className="hero">
@@ -9,30 +17,8 @@ export default function HomePage() {
             Coopérative pédagogique, nous cultivons des produits bio, concevons des systèmes hydroponiques et aquaponiques, accueillons des séjours et formons des groupes à l'écologie et au développement durable.
           </p>
           <div className="actions">
-            <a href="/products" className="button">Voir les produits</a>
-            <a href="/services" className="button secondary">Découvrir nos services</a>
-          </div>
-        </div>
-      </section>
-
-      <section className="section highlight">
-        <div className="container">
-          <div className="homeGrid">
-            <article className="homeCard">
-              <span className="cardIcon">🌿</span>
-              <h2>Produits naturels</h2>
-              <p>Œufs, volailles, petits animaux, fruits et légumes cultivés avec soin et respect de la terre.</p>
-            </article>
-            <article className="homeCard">
-              <span className="cardIcon">💧</span>
-              <h2>Services durables</h2>
-              <p>Hydroponie, aquaponie, formations, hébergement et résidence artistique au service d'une démarche écologique.</p>
-            </article>
-            <article className="homeCard">
-              <span className="cardIcon">🏡</span>
-              <h2>Expérience immersive</h2>
-              <p>Venez séjourner, apprendre sur place ou inviter votre groupe à découvrir les pratiques durables en direct.</p>
-            </article>
+            <Link href="/products" className="button">Voir les produits</Link>
+            <Link href="/services" className="button secondary">Découvrir nos services</Link>
           </div>
         </div>
       </section>
@@ -40,27 +26,65 @@ export default function HomePage() {
       <section className="section">
         <div className="container">
           <div className="sectionIntro">
-            <h2>Pourquoi choisir ADRO BIO FARM ?</h2>
+            <h2>Nos domaines métiers</h2>
             <p className="sectionLead">
-              Nous sommes une coopérative qui rassemble agriculture, pédagogie et créativité. Notre mission est de proposer des produits locaux, des systèmes innovants et des expériences enrichissantes pour les visiteurs, les artistes et les groupes.
+              ADRO BIO FARM s'organise autour de sept domaines métiers : ferme, végétal, pépinière, formation, hébergement, événementiel et écologie.
             </p>
           </div>
-          <div className="featureList">
-            <div className="featureCard">
-              <span className="featureIcon">🥚</span>
-              <h3>Produits fermiers</h3>
-              <p>Des œufs, du poulet, des moutons, des cailles, des lapins et des légumes de saison cultivés en respectant la nature.</p>
-            </div>
-            <div className="featureCard">
-              <span className="featureIcon">🌱</span>
-              <h3>Formation</h3>
-              <p>Stages et ateliers pour apprendre l'agriculture durable, la permaculture, l'hydroponie et l'aquaponie.</p>
-            </div>
-            <div className="featureCard">
-              <span className="featureIcon">🛏️</span>
-              <h3>Hébergement</h3>
-              <p>Des séjours en immersion avec un accueil chaleureux et un environnement propice à la détente.</p>
-            </div>
+          <div className="poleGrid">
+            {poles.map((pole) => (
+              <article key={pole.slug} className="poleCard">
+                <span className="cardIcon">{pole.icon}</span>
+                <h3>{pole.label}</h3>
+                <p>{pole.shortDescription}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section highlight">
+        <div className="container">
+          <div className="sectionIntro">
+            <h2>Produits phares</h2>
+            <p className="sectionLead">Une sélection de nos meilleurs produits, représentatifs de la diversité de la ferme et de nos pratiques durables.</p>
+          </div>
+          <div className="itemGrid">
+            {featuredProducts.map((product) => (
+              <article key={product.slug} className="itemCard">
+                <h3>{product.title}</h3>
+                <p>{product.shortDescription}</p>
+                <Link href={`/products/${product.slug}`} className="button secondary">
+                  Voir le produit
+                </Link>
+              </article>
+            ))}
+          </div>
+          <div className="actions" style={{ paddingTop: '1.75rem' }}>
+            <Link href="/products" className="button secondary">Voir tous les produits</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="sectionIntro">
+            <h2>Services essentiels</h2>
+            <p className="sectionLead">Des services sur-mesure pour accompagner vos projets d’agriculture durable, d’hébergement et d’événementiel.</p>
+          </div>
+          <div className="itemGrid">
+            {featuredServices.map((service) => (
+              <article key={service.slug} className="itemCard">
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+                <Link href={`/services/${service.slug}`} className="button secondary">
+                  Voir le service
+                </Link>
+              </article>
+            ))}
+          </div>
+          <div className="actions" style={{ paddingTop: '1.75rem' }}>
+            <Link href="/services" className="button secondary">Découvrir tous les services</Link>
           </div>
         </div>
       </section>
@@ -69,7 +93,7 @@ export default function HomePage() {
         <div className="container">
           <h2>Prêt à nous rejoindre ?</h2>
           <p>Contactez-nous pour réserver un séjour, commander des produits ou organiser une formation.</p>
-          <a href="/contact" className="button">Page contact</a>
+          <Link href="/contact" className="button">Page contact</Link>
         </div>
       </section>
     </main>
