@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import TagList from '../components/TagList';
 import { poles } from '../../data/poles';
 import { services } from '../../data/services';
+import { serviceTags } from '../../data/serviceTags';
 
 export default function ServicesPage() {
   const groupedServices = poles
@@ -35,8 +37,12 @@ export default function ServicesPage() {
               <div className="itemGrid">
                 {items.map((service) => (
                   <article key={service.slug} className="itemCard">
-                    <h3>{service.title}</h3>
-                    <p>{service.description}</p>
+                    <div>
+                      <h3>{service.title}</h3>
+                      <span className="detailBadge">{service.category}</span>
+                      <p>{service.description}</p>
+                      <TagList tags={serviceTags[service.slug]} />
+                    </div>
                     <Link href={`/services/${service.slug}`} className="button secondary">
                       En savoir plus
                     </Link>

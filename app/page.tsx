@@ -1,7 +1,10 @@
 import Link from 'next/link';
+import TagList from './components/TagList';
 import { poles } from '../data/poles';
 import { products } from '../data/products';
 import { services } from '../data/services';
+import { productTags } from '../data/productTags';
+import { serviceTags } from '../data/serviceTags';
 
 export default function HomePage() {
   const featuredProducts = products.slice(0, 4);
@@ -52,8 +55,11 @@ export default function HomePage() {
           <div className="itemGrid">
             {featuredProducts.map((product) => (
               <article key={product.slug} className="itemCard">
-                <h3>{product.title}</h3>
-                <p>{product.shortDescription}</p>
+                <div>
+                  <h3>{product.title}</h3>
+                  <p>{product.shortDescription}</p>
+                  <TagList tags={productTags[product.slug]} />
+                </div>
                 <Link href={`/products/${product.slug}`} className="button secondary">
                   Voir le produit
                 </Link>
@@ -75,8 +81,11 @@ export default function HomePage() {
           <div className="itemGrid">
             {featuredServices.map((service) => (
               <article key={service.slug} className="itemCard">
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
+                <div>
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                  <TagList tags={serviceTags[service.slug]} />
+                </div>
                 <Link href={`/services/${service.slug}`} className="button secondary">
                   Voir le service
                 </Link>

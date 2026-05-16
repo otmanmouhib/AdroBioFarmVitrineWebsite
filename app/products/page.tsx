@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import TagList from '../components/TagList';
 import { poles } from '../../data/poles';
 import { products } from '../../data/products';
+import { productTags } from '../../data/productTags';
 
 export default function ProductsPage() {
   const groupedProducts = poles
@@ -35,8 +37,12 @@ export default function ProductsPage() {
               <div className="itemGrid">
                 {items.map((product) => (
                   <article key={product.slug} className="itemCard">
-                    <h3>{product.title}</h3>
-                    <p>{product.shortDescription}</p>
+                    <div>
+                      <h3>{product.title}</h3>
+                      <span className="detailBadge">{product.category}</span>
+                      <p>{product.shortDescription}</p>
+                      <TagList tags={productTags[product.slug]} />
+                    </div>
                     <Link href={`/products/${product.slug}`} className="button secondary">
                       En savoir plus
                     </Link>

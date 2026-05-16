@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import TagList from '../../components/TagList';
 import { poles } from '../../../data/poles';
 import { services } from '../../../data/services';
 import { products } from '../../../data/products';
+import { serviceTags } from '../../../data/serviceTags';
 
 type PageParams = { params: Promise<{ slug: string }> };
 
@@ -42,6 +44,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           <p className="eyebrow">Service</p>
           <h1>{service.title}</h1>
           <p className="intro">{service.description}</p>
+          <TagList tags={serviceTags[service.slug]} />
           <div className="actions">
             <Link href="/contact" className="button">Contactez-nous</Link>
             <Link href="/services" className="button secondary">Retour aux services</Link>
