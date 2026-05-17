@@ -1,16 +1,21 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import TagList from '../components/TagList';
+import PoleFilter from '../components/PoleFilter';
 import { poles } from '../../data/poles';
 import { products } from '../../data/products';
 import { productTags } from '../../data/productTags';
 
+function getPoleIcon(slug: string) {
+  return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
+}
+
 export default function ProductsPage() {
-  const groupedProducts = poles
-    .map((pole) => ({
-      pole,
-      items: products.filter((product) => product.pole === pole.slug),
-    }))
-    .filter((group) => group.items.length > 0);
+  const [activePole, setActivePole] = useState(poles[0]?.slug ?? '');
+  const selectedPole = poles.find((pole) => pole.slug === activePole) ?? poles[0];
+  const visibleProducts = products.filter((product) => product.pole === activePole);
 
   return (
     <main>
@@ -27,30 +32,39 @@ export default function ProductsPage() {
 
       <section className="section">
         <div className="container">
-          {groupedProducts.map(({ pole, items }) => (
-            <div key={pole.slug} className="sectionBlock">
-              <div className="sectionIntro">
-                <span className="detailBadge">{pole.label}</span>
-                <h2>{pole.label}</h2>
-                <p>{pole.shortDescription}</p>
-              </div>
-              <div className="itemGrid">
-                {items.map((product) => (
-                  <article key={product.slug} className="itemCard">
-                    <div>
-                      <h3>{product.title}</h3>
-                      <span className="detailBadge">{product.category}</span>
-                      <p>{product.shortDescription}</p>
-                      <TagList tags={productTags[product.slug]} />
-                    </div>
-                    <Link href={`/products/${product.slug}`} className="button secondary">
-                      En savoir plus
-                    </Link>
-                  </article>
-                ))}
-              </div>
+          <div className="sectionIntro">
+            <h2>Choisissez un domaine</h2>
+            <p className="sectionLead">Voyez un domaine à la fois pour rester clair et découvrir l’offre sans surcharge.</p>
+          </div>
+          <PoleFilter poles={poles} active={activePole} onSelect={setActivePole} />
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="sectionBlock">
+            <div className="sectionIntro">
+              <span className="detailBadge">{selectedPole.label}</span>
+              <h2>{selectedPole.label}</h2>
+              <p>{selectedPole.shortDescription}</p>
             </div>
-          ))}
+            <div className="itemGrid">
+              {visibleProducts.map((product) => (
+                <article key={product.slug} className="itemCard">
+                  <div>
+                    <span className="cardIcon small">{getPoleIcon(product.pole)}</span>
+                    <h3>{product.title}</h3>
+                    <span className="detailBadge">{product.category}</span>
+                    <p>{product.shortDescription}</p>
+                    <TagList tags={productTags[product.slug]} max={2} />
+                  </div>
+                  <Link href={`/products/${product.slug}`} className="button secondary">
+                    En savoir plus
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

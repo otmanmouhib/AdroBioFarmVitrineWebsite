@@ -1,16 +1,21 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import TagList from '../components/TagList';
+import PoleFilter from '../components/PoleFilter';
 import { poles } from '../../data/poles';
 import { services } from '../../data/services';
 import { serviceTags } from '../../data/serviceTags';
 
+function getPoleIcon(slug: string) {
+  return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
+}
+
 export default function ServicesPage() {
-  const groupedServices = poles
-    .map((pole) => ({
-      pole,
-      items: services.filter((service) => service.pole === pole.slug),
-    }))
-    .filter((group) => group.items.length > 0);
+  const [activePole, setActivePole] = useState(poles[0]?.slug ?? '');
+  const selectedPole = poles.find((pole) => pole.slug === activePole) ?? poles[0];
+  const visibleServices = services.filter((service) => service.pole === activePole);
 
   return (
     <main>
@@ -27,30 +32,39 @@ export default function ServicesPage() {
 
       <section className="section">
         <div className="container">
-          {groupedServices.map(({ pole, items }) => (
-            <div key={pole.slug} className="sectionBlock">
-              <div className="sectionIntro">
-                <span className="detailBadge">{pole.label}</span>
-                <h2>{pole.label}</h2>
-                <p>{pole.shortDescription}</p>
-              </div>
-              <div className="itemGrid">
-                {items.map((service) => (
-                  <article key={service.slug} className="itemCard">
-                    <div>
-                      <h3>{service.title}</h3>
-                      <span className="detailBadge">{service.category}</span>
-                      <p>{service.description}</p>
-                      <TagList tags={serviceTags[service.slug]} />
-                    </div>
-                    <Link href={`/services/${service.slug}`} className="button secondary">
-                      En savoir plus
-                    </Link>
-                  </article>
-                ))}
-              </div>
+          <div className="sectionIntro">
+            <h2>Choisissez un domaine</h2>
+            <p className="sectionLead">Explorez un domaine à la fois pour une navigation plus claire et efficace.</p>
+          </div>
+          <PoleFilter poles={poles} active={activePole} onSelect={setActivePole} />
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="sectionBlock">
+            <div className="sectionIntro">
+              <span className="detailBadge">{selectedPole.label}</span>
+              <h2>{selectedPole.label}</h2>
+              <p>{selectedPole.shortDescription}</p>
             </div>
-          ))}
+            <div className="itemGrid">
+              {visibleServices.map((service) => (
+                <article key={service.slug} className="itemCard">
+                  <div>
+                    <span className="cardIcon small">{getPoleIcon(service.pole)}</span>
+                    <h3>{service.title}</h3>
+                    <span className="detailBadge">{service.category}</span>
+                    <p>{service.description}</p>
+                    <TagList tags={serviceTags[service.slug]} max={2} />
+                  </div>
+                  <Link href={`/services/${service.slug}`} className="button secondary">
+                    En savoir plus
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

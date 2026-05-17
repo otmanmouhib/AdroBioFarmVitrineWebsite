@@ -4,14 +4,18 @@ export default function Navbar() {
   return (
     <header className="siteHeader">
       <div className="container navBar">
-        <Link href="/" className="brand">
-          ADRO BIO FARM
-        </Link>
+        <div className="brandBlock">
+          <Link href="/" className="brand">
+            ADRO BIO FARM
+          </Link>
+          <p className="brandTag">Ferme durable, formations et expériences engagées.</p>
+        </div>
+
         <nav className="navLinks">
           <Link href="/" className="navLink">Accueil</Link>
           <Link href="/products" className="navLink">Produits</Link>
           <Link href="/services" className="navLink">Services</Link>
-          <Link href="/contact" className="navLink">Contact</Link>
+          <Link href="/contact" className="navLink navButton">Contact</Link>
         </nav>
       </div>
     </header>
