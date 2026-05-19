@@ -1,33 +1,192 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function ContactPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus('sending');
+    setError('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        setError(body?.error || 'Une erreur est survenue.');
+        setStatus('error');
+        return;
+      }
+
+      setName('');
+      setEmail('');
+      setSubject('');
+      setMessage('');
+      setStatus('success');
+    } catch (err) {
+      setError('Impossible d’envoyer le message pour le moment.');
+      setStatus('error');
+    }
+  }
+
   return (
     <main>
       <section className="section hero">
         <div className="container heroContent">
-          <p className="eyebrow">Contact</p>
-          <h1>Contactez ADRO BIO FARM</h1>
-          <p className="intro">
-            Pour commander, réserver un séjour, organiser une formation ou en savoir plus sur nos activités, envoyez-nous un message ou appelez-nous directement.
-          </p>
+          <div className="heroIntro">
+            <p className="eyebrow">Contact</p>
+            <h1>Contactez ADRO BIO FARM</h1>
+            <p className="intro">
+              Pour commander, réserver un séjour, organiser une formation ou en savoir plus sur nos activités, envoyez-nous un message.
+            </p>
+
+            <div className="heroBadges">
+              <span className="heroBadge">Réponses rapides</span>
+              <span className="heroBadge">Accompagnement engagé</span>
+              <span className="heroBadge">Service local</span>
+            </div>
+
+            <div className="actions heroActions">
+              <a href="#contact-form" className="button">Écrire un message</a>
+              <a href="mailto:contact@adro-bio-farm.example" className="button secondary">Envoyer un email</a>
+            </div>
+          </div>
+
+          <aside className="heroPanel">
+            <p className="eyebrow">Notre support</p>
+            <h2>Une équipe claire, réactive et proche de vos projets.</h2>
+            <p className="heroPanelText">
+              Nous traitons chaque demande comme un projet durable : commande, formation, accueil ou accompagnement agricole.
+            </p>
+            <ul className="heroPanelList">
+              <li>Réponse sous 48 heures ouvrées</li>
+              <li>Propositions simples et transparentes</li>
+              <li>Suivi orienté terrain et résultat</li>
+            </ul>
+          </aside>
         </div>
       </section>
 
       <section className="section">
         <div className="container contactGrid">
-          <div className="contactCard">
-            <h2>Nos informations</h2>
-            <p>Email : <a href="mailto:contact@adro-bio-farm.example">contact@adro-bio-farm.example</a></p>
-            <p>Téléphone : <a href="tel:+33600000000">+33 6 00 00 00 00</a></p>
-            <p>Adresse : Ferme pédagogique ADRO BIO FARM, France</p>
+          <div className="contactCard contactDetails">
+            <div className="contactDetailHeader">
+              <p className="eyebrow">Nous sommes à votre écoute</p>
+              <h2>Échangez avec une équipe réactive et engagée</h2>
+              <p className="sectionLead">
+                Nos réponses sont claires, simples et orientées vers votre projet : production, formation, accueil ou événement.
+              </p>
+            </div>
+
+            <div className="contactMetaGrid">
+              <div className="contactMetaItem">
+                <span>📧</span>
+                <div>
+                  <strong>Email</strong>
+                  <p><a href="mailto:contact@adro-bio-farm.example">contact@adro-bio-farm.example</a></p>
+                </div>
+              </div>
+
+              <div className="contactMetaItem">
+                <span>📞</span>
+                <div>
+                  <strong>Téléphone</strong>
+                  <p><a href="tel:+33600000000">+33 6 00 00 00 00</a></p>
+                </div>
+              </div>
+
+              <div className="contactMetaItem">
+                <span>📍</span>
+                <div>
+                  <strong>Adresse</strong>
+                  <p>Ferme pédagogique ADRO BIO FARM, France</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="contactHelp">
+              <h3>Pourquoi nous écrire ?</h3>
+              <ul>
+                <li>Réserver des produits fermiers et des paniers</li>
+                <li>Demander un devis ou un accompagnement agricole</li>
+                <li>Organiser une formation, un atelier ou un séjour</li>
+                <li>Proposer un projet collaboratif ou une résidence</li>
+              </ul>
+            </div>
           </div>
-          <div className="contactCard">
-            <h2>Pourquoi nous écrire ?</h2>
-            <ul>
-              <li>Réserver des produits fermiers et des paniers</li>
-              <li>Demander un devis pour un système hydroponique ou aquaponique</li>
-              <li>Organiser une formation ou un atelier</li>
-              <li>Proposer un séjour ou une résidence artistique</li>
-            </ul>
-          </div>
+
+          <form className="contactCard contactForm" onSubmit={handleSubmit}>
+            <div className="contactFormHeader">
+              <p className="eyebrow">Formulaire de contact</p>
+              <h2>Écrivez-nous, nous vous accompagnons</h2>
+              <p className="formHint">Toutes les demandes sont traitées avec soin et discrétion.</p>
+            </div>
+
+            <label>
+              Nom complet
+              <input
+                type="text"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                required
+                placeholder="Votre nom"
+              />
+            </label>
+
+            <label>
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+                placeholder="votre@email.com"
+              />
+            </label>
+
+            <label>
+              Sujet
+              <input
+                type="text"
+                value={subject}
+                onChange={(event) => setSubject(event.target.value)}
+                placeholder="Objet du message"
+              />
+            </label>
+
+            <label>
+              Message
+              <textarea
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                required
+                placeholder="Votre message"
+                rows={6}
+              />
+            </label>
+
+            {status === 'success' && (
+              <p className="formNotice success">Merci ! Votre message a bien été envoyé.</p>
+            )}
+            {status === 'error' && <p className="formNotice error">{error}</p>}
+
+            <button type="submit" className="button" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Envoi...' : 'Envoyer le message'}
+            </button>
+
+            <p className="contactFormNote">Nous répondons sous 48 heures ouvrées et traitons vos demandes avec priorité.</p>
+          </form>
         </div>
       </section>
 
