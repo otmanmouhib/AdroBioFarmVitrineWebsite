@@ -11,6 +11,10 @@ function getPoleIcon(slug: string) {
   return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
 }
 
+function getCardImage(title: string) {
+  return `https://placehold.co/600x420/f0faf5/3b4f35?text=${encodeURIComponent(title)}`;
+}
+
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const requestedPole = searchParams.get('pole');
@@ -37,6 +41,9 @@ export default function ProductsPage() {
           <div className="itemGrid productCards">
             {visibleProducts.map((product) => (
               <article key={product.slug} className="itemCard catalogItem">
+                <div className="cardMedia">
+                  <img src={product.image ?? getCardImage(product.title)} alt={product.title} />
+                </div>
                 <div className="itemHeader">
                   <span className="cardIcon small">{getPoleIcon(product.pole)}</span>
                   <div>

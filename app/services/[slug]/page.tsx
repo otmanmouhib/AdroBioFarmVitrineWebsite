@@ -39,15 +39,35 @@ export default async function ServiceDetailPage({ params }: PageParams) {
 
   return (
     <main>
-      <section className="section hero">
+      <section className="section hero detailHero">
         <div className="container heroContent">
-          <p className="eyebrow">Service</p>
-          <h1>{service.title}</h1>
-          <p className="intro">{service.description}</p>
-          <TagList tags={serviceTags[service.slug]} />
-          <div className="actions">
-            <Link href="/contact" className="button">Contactez-nous</Link>
-            <Link href="/services" className="button secondary">Retour aux services</Link>
+          <div className="heroIntro">
+            <span className="detailBadge">{service.category}</span>
+            <p className="eyebrow">Service</p>
+            <h1>{service.title}</h1>
+            <p className="intro">{service.description}</p>
+            <div className="chips">
+              {service.methodology.slice(0, 3).map((item) => (
+                <span key={item} className="tagChip">
+                  {item}
+                </span>
+              ))}
+            </div>
+            <div className="actions">
+              <Link href="/contact" className="button">Contactez-nous</Link>
+              <Link href="/services" className="button secondary">Retour aux services</Link>
+            </div>
+          </div>
+
+          <div className="detailGallery">
+            {service.image ? (
+              <img src={service.image} alt={service.title} />
+            ) : (
+              <div className="galleryPlaceholder">
+                <span>📷</span>
+                <p>Image du service</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -57,33 +77,26 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           <div>
             <span className="detailBadge">{pole?.label ?? 'Catalogue'}</span>
             <p className="sectionLead">{pole?.shortDescription}</p>
-            <h2>Méthodologie</h2>
+            <h2>Comment ça marche</h2>
             <ul className="detailList">
               {service.methodology.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
-          </div>
-
-          <div className="itemCard">
-            <h3>Livrables</h3>
+            <h3>Ce que vous recevez</h3>
             <ul className="detailList">
               {service.deliverables.map((deliverable) => (
                 <li key={deliverable}>{deliverable}</li>
               ))}
             </ul>
-            {service.duration && (
-              <>
-                <h3>Durée</h3>
-                <p>{service.duration}</p>
-              </>
-            )}
-            {service.audience && (
-              <>
-                <h3>Public</h3>
-                <p>{service.audience}</p>
-              </>
-            )}
+          </div>
+
+          <div className="itemCard detailSidebar">
+            <h3>Informations clés</h3>
+            <p><strong>Catalogue :</strong> {pole?.label ?? 'ADRO BIO FARM'}</p>
+            <p><strong>Type :</strong> {service.category}</p>
+            {service.duration && <p><strong>Durée :</strong> {service.duration}</p>}
+            {service.audience && <p><strong>Public :</strong> {service.audience}</p>}
             <div className="detailFooter">
               <Link href="/contact" className="button secondary">Demander un devis</Link>
             </div>

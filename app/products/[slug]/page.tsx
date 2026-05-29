@@ -39,15 +39,35 @@ export default async function ProductDetailPage({ params }: PageParams) {
 
   return (
     <main>
-      <section className="section hero">
+      <section className="section hero detailHero">
         <div className="container heroContent">
-          <p className="eyebrow">Produit</p>
-          <h1>{product.title}</h1>
-          <p className="intro">{product.description}</p>
-          <TagList tags={productTags[product.slug]} />
-          <div className="actions">
-            <Link href="/contact" className="button">Contact et commande</Link>
-            <Link href="/products" className="button secondary">Retour aux produits</Link>
+          <div className="heroIntro">
+            <span className="detailBadge">{product.category}</span>
+            <p className="eyebrow">Produit</p>
+            <h1>{product.title}</h1>
+            <p className="intro">{product.description}</p>
+            <div className="chips">
+              {product.features.map((feature) => (
+                <span key={feature} className="tagChip">
+                  {feature}
+                </span>
+              ))}
+            </div>
+            <div className="actions">
+              <Link href="/contact" className="button">Contacter pour commande</Link>
+              <Link href="/products" className="button secondary">Retour aux produits</Link>
+            </div>
+          </div>
+
+          <div className="detailGallery">
+            {product.image ? (
+              <img src={product.image} alt={product.title} />
+            ) : (
+              <div className="galleryPlaceholder">
+                <span>📦</span>
+                <p>Image du produit</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -57,7 +77,9 @@ export default async function ProductDetailPage({ params }: PageParams) {
           <div>
             <span className="detailBadge">{pole?.label ?? 'Catalogue'}</span>
             <p className="sectionLead">{pole?.shortDescription}</p>
-            <h2>Caractéristiques</h2>
+            <h2>Description détaillée</h2>
+            <p>{product.description}</p>
+            <h3>Ce que contient ce produit</h3>
             <ul className="detailList">
               {product.features.map((feature) => (
                 <li key={feature}>{feature}</li>
@@ -65,13 +87,13 @@ export default async function ProductDetailPage({ params }: PageParams) {
             </ul>
           </div>
 
-          <div className="itemCard">
-            <h3>Catégorie</h3>
-            <p>{product.category}</p>
-            <h3>Description</h3>
-            <p>{product.description}</p>
+          <div className="itemCard detailSidebar">
+            <h3>Informations clés</h3>
+            <p><strong>Catalogue :</strong> {pole?.label ?? 'ADRO BIO FARM'}</p>
+            <p><strong>Type :</strong> {product.category}</p>
+            <p><strong>Commande :</strong> par contact uniquement</p>
             <div className="detailFooter">
-              <Link href="/contact" className="button secondary">Demander un devis</Link>
+              <Link href="/contact" className="button secondary">Contacter pour une commande</Link>
             </div>
           </div>
         </div>

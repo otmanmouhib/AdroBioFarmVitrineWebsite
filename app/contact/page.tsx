@@ -42,39 +42,15 @@ export default function ContactPage() {
 
   return (
     <main>
-      <section className="section hero">
-        <div className="container heroContent">
-          <div className="heroIntro">
+      <section className="section">
+        <div className="container">
+          <div className="sectionIntro">
             <p className="eyebrow">Contact</p>
             <h1>Contactez ADRO BIO FARM</h1>
             <p className="intro">
               Pour commander, réserver un séjour, organiser une formation ou en savoir plus sur nos activités, envoyez-nous un message.
             </p>
-
-            <div className="heroBadges">
-              <span className="heroBadge">Réponses rapides</span>
-              <span className="heroBadge">Accompagnement engagé</span>
-              <span className="heroBadge">Service local</span>
-            </div>
-
-            <div className="actions heroActions">
-              <a href="#contact-form" className="button">Écrire un message</a>
-              <a href="mailto:contact@adro-bio-farm.example" className="button secondary">Envoyer un email</a>
-            </div>
           </div>
-
-          <aside className="heroPanel">
-            <p className="eyebrow">Notre support</p>
-            <h2>Une équipe claire, réactive et proche de vos projets.</h2>
-            <p className="heroPanelText">
-              Nous traitons chaque demande comme un projet durable : commande, formation, accueil ou accompagnement agricole.
-            </p>
-            <ul className="heroPanelList">
-              <li>Réponse sous 48 heures ouvrées</li>
-              <li>Propositions simples et transparentes</li>
-              <li>Suivi orienté terrain et résultat</li>
-            </ul>
-          </aside>
         </div>
       </section>
 
