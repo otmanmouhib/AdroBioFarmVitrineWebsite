@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { poles } from '../../data/poles';
 
 const productPanes = poles.map((pole) => ({
@@ -38,11 +38,20 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    const [basePath] = href.split('?');
-    return pathname?.startsWith(basePath);
+
+    const [basePath, query] = href.split('?');
+    if (pathname !== basePath) return false;
+    if (!query) return true;
+
+    const expected = new URLSearchParams(query);
+    for (const [key, value] of expected.entries()) {
+      if (searchParams.get(key) !== value) return false;
+    }
+    return true;
   };
 
   const toggleDropdown = (href: string) => {

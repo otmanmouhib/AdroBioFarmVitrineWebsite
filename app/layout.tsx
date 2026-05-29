@@ -13,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" suppressHydrationWarning>
       <body>
-        <Navbar />
+        <Suspense fallback={null}>
+          <Navbar />
+        </Suspense>
         <Suspense fallback={null}>{children}</Suspense>
         <Footer />
       </body>
