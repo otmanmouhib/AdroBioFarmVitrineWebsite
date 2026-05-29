@@ -15,6 +15,10 @@ export default function Footer() {
           <p className="footerTitle">Explorer</p>
           <ul className="footerLinks">
             <li><Link href="/">Accueil</Link></li>
+            <li><Link href="/boutique">Boutique</Link></li>
+            <li><Link href="/news">News</Link></li>
+            <li><Link href="/references">Références</Link></li>
+            <li><Link href="/certifications">Certifications</Link></li>
             <li><Link href="/products">Produits</Link></li>
             <li><Link href="/services">Services</Link></li>
             <li><Link href="/contact">Contact</Link></li>

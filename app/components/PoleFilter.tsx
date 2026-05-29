@@ -10,11 +10,13 @@ type PoleFilterProps = {
 
 export default function PoleFilter({ poles, active, onSelect }: PoleFilterProps) {
   return (
-    <div className="poleTabs">
+    <div className="poleTabs" role="tablist" aria-label="Filtrer le catalogue par pôle">
       {poles.map((pole) => (
         <button
           key={pole.slug}
           type="button"
+          role="tab"
+          aria-selected={active === pole.slug}
           className={`poleTabButton ${active === pole.slug ? 'active' : ''}`}
           style={active === pole.slug ? { borderColor: pole.color, color: pole.color } : undefined}
           onClick={() => onSelect(pole.slug)}

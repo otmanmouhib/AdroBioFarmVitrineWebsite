@@ -1,14 +1,14 @@
 import ComingSoonPage from '../components/ComingSoonPage';
 
 export const metadata = {
-  title: 'Références - ADRO BIO FARM',
-  description: 'Page Références en construction : un espace professionnel et qualitatif sera bientôt disponible.',
+  title: 'Boutique - ADRO BIO FARM',
+  description: 'Page Boutique en construction : un espace élégant, mobile-first et professionnel sera disponible bientôt.',
 };
 
-export default function ReferencesPage() {
+export default function BoutiquePage() {
   return (
     <ComingSoonPage
-      pageLabel="Références"
+      pageLabel="Boutique"
       title="Page en construction"
       intro="Cette page est actuellement en construction. Nous préparons une version élégante, professionnelle et mobile-first pour bientôt vous la présenter."
       badges={['Coming soon', 'En construction', 'Mobile first']}

@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import TagList from '../components/TagList';
-import PoleFilter from '../components/PoleFilter';
 import { poles } from '../../data/poles';
 import { services } from '../../data/services';
 import { serviceTags } from '../../data/serviceTags';
@@ -13,51 +12,14 @@ function getPoleIcon(slug: string) {
 }
 
 export default function ServicesPage() {
-  const [activePole, setActivePole] = useState(poles[0]?.slug ?? '');
+  const searchParams = useSearchParams();
+  const requestedPole = searchParams.get('pole');
+  const activePole = poles.some((pole) => pole.slug === requestedPole) ? requestedPole : poles[0]?.slug ?? '';
   const selectedPole = poles.find((pole) => pole.slug === activePole) ?? poles[0];
   const visibleServices = services.filter((service) => service.pole === activePole);
 
   return (
     <main>
-      <section className="section hero productsHero">
-        <div className="container heroContent">
-          <div className="heroIntro">
-            <p className="eyebrow">Nos services</p>
-            <h1>Services sur mesure pour vos projets durables et pédagogiques</h1>
-            <p className="intro">
-              ADRO BIO FARM propose un catalogue de services organisé par domaine pour vous aider à choisir vite et activer votre projet.
-            </p>
-
-            <div className="heroBadges">
-              <span className="heroBadge">Accompagnement</span>
-              <span className="heroBadge">Formation</span>
-              <span className="heroBadge">Événementiel</span>
-            </div>
-
-            <Link href="/contact" className="button">Nous contacter</Link>
-          </div>
-
-          <aside className="heroPanel heroPanelProduct">
-            <div className="heroPanelHeader">
-              <p className="eyebrow">Catalogue service</p>
-              <div className="heroPanelStat">
-                <strong>{services.length}+</strong>
-                <span>références disponibles</span>
-              </div>
-            </div>
-            <h2>Un parcours clair et adapté à votre besoin.</h2>
-            <p className="heroPanelText">
-              Retrouvez nos offres de formation, d’accueil, d’événements et d’accompagnement en un seul endroit.
-            </p>
-            <ul className="heroPanelList">
-              <li>Parcours métier par domaine</li>
-              <li>Services clairs et faciles à comparer</li>
-              <li>Accès direct au contact et à la commande</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
-
       <section className="section productCatalog">
         <div className="container">
           <div className="catalogHeader">
@@ -70,15 +32,6 @@ export default function ServicesPage() {
               <span>{visibleServices.length} références</span>
               <span className="catalogMetaLabel">{selectedPole.label}</span>
             </div>
-          </div>
-
-          <div className="filterBar">
-            <PoleFilter poles={poles} active={activePole} onSelect={setActivePole} />
-          </div>
-
-          <div className="catalogSummary">
-            <span className="detailBadge">{selectedPole.label}</span>
-            <p>{selectedPole.shortDescription}</p>
           </div>
 
           <div className="itemGrid productCards">
