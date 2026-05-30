@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 import Navbar from './components/Navbar';
+import Breadcrumb from './components/Breadcrumb';
 import Footer from './components/Footer';
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Suspense fallback={null}>
           <Navbar />
+          <Breadcrumb />
         </Suspense>
         <Suspense fallback={null}>{children}</Suspense>
         <Footer />

@@ -52,6 +52,58 @@ main {
   overflow: visible;
 }
 
+.breadcrumb {
+  display: none;
+  padding: 0.75rem 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(74, 107, 61, 0.08);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  color: var(--green-700);
+}
+
+.breadcrumb li.active {
+  color: var(--green-900);
+  font-weight: 700;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+  text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+  color: rgba(80, 122, 47, 0.6);
+}
+
+@media (min-width: 900px) {
+  .breadcrumb {
+    display: block;
+  }
+}
+
 .navBar {
   display: grid;
   gap: 0.6rem;
@@ -275,6 +327,16 @@ main {
 
   .brandBlock {
     gap: 0.15rem;
+    min-width: 0;
+    max-width: 18rem;
+  }
+
+  .brand {
+    font-size: 0.95rem;
+  }
+
+  .brandTag {
+    display: none;
   }
 
   .navToggle {
@@ -285,12 +347,13 @@ main {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.75rem;
+    justify-content: space-between;
+    gap: 0.5rem;
     padding: 0;
     margin: 0;
-    width: 100%;
-    max-width: 100%;
+    width: auto;
+    flex: 1;
+    min-width: 0;
     border: none;
     border-radius: 0;
     background: transparent;
@@ -304,13 +367,17 @@ main {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.45rem;
+    min-width: 0;
+    overflow: visible;
   }
 
   .navGroup {
     position: relative;
     display: grid;
-    gap: 0.25rem;
+    gap: 0.1rem;
+    min-width: 0;
+    overflow: visible;
   }
 
   .navGroupList {
@@ -361,10 +428,11 @@ main {
   .navLink {
     background: transparent;
     border: none;
-    padding: 0.2rem 0.45rem;
+    padding: 0.16rem 0.45rem;
     color: var(--green-700);
     white-space: nowrap;
     font-size: 0.82rem;
+    letter-spacing: 0.01em;
   }
 
   .navLink:hover,
@@ -393,37 +461,37 @@ main {
   .navAction,
   .navButton {
     min-width: auto;
-    padding: 0.55rem 1rem;
-    font-size: 0.88rem;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
   }
 }
 
 .hero {
   position: relative;
-  background: linear-gradient(180deg, #f6faf2 0%, #f8fbf5 44%, #ecf4e0 100%);
-  padding: 4.5rem 0 3.5rem;
+  background: linear-gradient(180deg, #eef7ea 0%, #f8fbf5 45%, #ffffff 100%);
+  padding: 4.5rem 0 3rem;
   overflow: hidden;
 }
 
 .hero::before {
   content: '';
   position: absolute;
-  top: -10%;
-  right: -10%;
+  top: -12%;
+  right: -8%;
   width: 32rem;
   height: 32rem;
-  background: radial-gradient(circle, rgba(110, 166, 62, 0.16) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(77, 121, 55, 0.18) 0%, transparent 58%);
   pointer-events: none;
 }
 
 .hero::after {
   content: '';
   position: absolute;
-  bottom: -12%;
-  left: -6%;
-  width: 28rem;
-  height: 28rem;
-  background: radial-gradient(circle, rgba(80, 122, 47, 0.08) 0%, transparent 58%);
+  bottom: -14%;
+  left: -8%;
+  width: 32rem;
+  height: 32rem;
+  background: radial-gradient(circle, rgba(74, 105, 42, 0.1) 0%, transparent 62%);
   pointer-events: none;
 }
 
@@ -435,22 +503,66 @@ main {
   margin: 0 auto;
 }
 
-..detailHero {
+.detailHero {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
 
 .detailHero .heroContent {
   grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.detailHero .heroIntro {
   gap: 1rem;
 }
 
 .detailHero .heroIntro {
-  gap: 0.9rem;
+  max-width: 48rem;
 }
 
 .detailHero .actions {
   gap: 0.65rem;
+}
+
+.detailHero .heroPanel {
+  min-width: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: calc(var(--radius) * 1.1);
+  padding: 1.5rem;
+  border: 1px solid rgba(80, 122, 47, 0.14);
+  box-shadow: var(--shadow-sm);
+}
+
+.heroPanelImage {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 1.05);
+  aspect-ratio: 4 / 3;
+  min-height: 280px;
+  max-height: 520px;
+}
+
+.heroPanelImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 980px) {
+  .detailHero .heroContent {
+    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 1fr);
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .heroPanelImage {
+    min-height: 360px;
+    max-height: 640px;
+  }
 }
 
 .galleryPlaceholder {
@@ -513,40 +625,145 @@ main {
 
 .heroIntro {
   display: grid;
-  gap: 1rem;
+  gap: 1.1rem;
   max-width: 42rem;
 }
 
-.detailHero .detailBadge {
-  margin-bottom: 0.7rem;
+.heroLanding .heroIntro {
+  max-width: 40rem;
 }
 
-.heroBadges {
+.heroBadgeGroup {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+  gap: 0.7rem;
+  margin-top: 1rem;
 }
 
 .heroBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.7rem 1.15rem;
+  padding: 0.65rem 1rem;
   border-radius: var(--radius-pill);
-  background: rgba(80, 122, 47, 0.14);
+  background: rgba(80, 122, 47, 0.12);
   color: var(--green-900);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
-.heroPanel {
+.heroActions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.button.primaryLarge,
+.button.secondaryLarge {
+  width: 100%;
+}
+
+.button.primaryLarge {
+  padding: 1.05rem 1.4rem;
+  font-size: 0.98rem;
+}
+
+.button.secondaryLarge {
+  padding: 1.05rem 1.4rem;
+  font-size: 0.98rem;
+}
+
+.heroPanelLanding {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(80, 122, 47, 0.14);
+  box-shadow: 0 24px 70px rgba(49, 77, 32, 0.08);
+  border-radius: calc(var(--radius) * 1.2);
+  padding: 2rem;
+}
+
+.heroPanelLanding h2 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.75rem, 2.2vw, 2.3rem);
+}
+
+.heroPanelText {
+  margin-top: 1rem;
+  color: var(--green-700);
+  line-height: 1.85;
+}
+
+.heroPanelStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.heroPanelStats div {
+  padding: 1rem 1rem 0.8rem;
+  background: rgba(80, 122, 47, 0.07);
+  border-radius: 14px;
+}
+
+.heroPanelStats strong {
+  display: block;
+  font-size: 1.2rem;
+  color: var(--green-900);
+}
+
+.heroPanelStats span {
+  color: var(--green-700);
+  font-size: 0.95rem;
+}
+
+.heroPanelListLanding {
+  margin-top: 1.75rem;
+  padding-left: 1.2rem;
+  list-style: none;
+}
+
+.heroPanelListLanding li {
+  margin-bottom: 0.85rem;
+  position: relative;
+  padding-left: 1.6rem;
+  color: var(--green-700);
+  line-height: 1.75;
+}
+
+.heroPanelListLanding li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green-900);
+  font-size: 1.15rem;
+  top: 0;
+}
+
+..heroPanel {
   background: rgba(255, 255, 255, 0.98);
   border-radius: calc(var(--radius) * 1.1);
-  padding: 2rem;
+  padding: 1.25rem;
   border: 1px solid rgba(80, 122, 47, 0.14);
   box-shadow: var(--shadow-sm);
+}
+
+.heroPanelImage {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 1.05);
+  aspect-ratio: 16 / 9;
+  min-height: 240px;
+  max-height: 420px;
+}
+
+.heroPanelImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .heroPanel h2 {
@@ -1263,6 +1480,39 @@ ul {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(80, 122, 47, 0.12);
   margin-bottom: 1.5rem;
+}
+
+.sectionNote {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: calc(var(--radius) * 1.05);
+  background: rgba(79, 122, 47, 0.06);
+  color: var(--green-700);
+  border: 1px solid rgba(80, 122, 47, 0.12);
+}
+
+.sectionNote p {
+  margin: 0;
+  line-height: 1.75;
+}
+
+.paginationControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.paginationControls span {
+  color: var(--green-700);
+  font-weight: 700;
+}
+
+.paginationControls .button.secondary,
+.paginationControls .button.secondary:disabled {
+  min-width: auto;
 }
 
 .catalogHeader h2 {
@@ -2138,43 +2388,45 @@ ul {
 
 /* ── Footer ──────────────────────────────────── */
 .footer {
-  background: #f5f7ee;
-  border-top: 1px solid rgba(80, 122, 47, 0.18);
-  padding: 3rem 0 1.5rem;
+  background: linear-gradient(180deg, #1e3d1e 0%, #2f6239 100%);
+  border-top: none;
+  padding: 4rem 0 2.5rem;
+  color: #eef4de;
 }
 
 .footerGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 2.5rem;
+  padding: 0;
 }
 
 .footerBrandBlock {
-  max-width: 26rem;
+  max-width: 32rem;
 }
 
 .footerBrand {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--green-900);
-  letter-spacing: 0.1em;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.18em;
   margin: 0 0 1rem;
 }
 
 .footerText {
-  margin: 0.6rem 0 0;
-  color: var(--green-700);
-  line-height: 1.9;
-  max-width: 28rem;
+  margin: 0.75rem 0 0;
+  color: rgba(238, 244, 222, 0.92);
+  line-height: 1.95;
+  max-width: 34rem;
 }
 
 .footerTitle {
   margin: 0 0 1rem;
-  font-weight: 700;
-  font-size: 0.85rem;
+  font-weight: 800;
+  font-size: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--green-900);
+  letter-spacing: 0.14em;
+  color: #f5f9e7;
 }
 
 .footerLinks {
@@ -2182,35 +2434,38 @@ ul {
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.8rem;
+  gap: 0.85rem;
 }
 
 .footerLinks a {
-  color: var(--green-700);
+  color: rgba(242, 246, 219, 0.95);
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.18s ease, transform 0.18s ease;
+  display: inline-block;
+  padding: 0.1rem 0;
 }
 
-.footerLinks a:hover {
-  color: var(--green-900);
+.footerLinks a:hover,
+.footerLinks a:focus-visible {
+  color: #ffffff;
+  transform: translateX(2px);
 }
 
 .footerBottom {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(80, 122, 47, 0.12);
+  margin-top: 3rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footerBottomGrid {
   display: grid;
-  gap: 1rem;
+  gap: 0.9rem;
   align-items: center;
 }
 
 .footerBottom p {
   margin: 0;
-  color: var(--green-700);
-  opacity: 0.95;
+  color: rgba(238, 244, 222, 0.78);
   font-size: 0.92rem;
 }
 
@@ -2257,6 +2512,14 @@ ul {
   .footerGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: start;
+  }
+
+  .footerBottomGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footerPanel {
+    margin-bottom: 2.5rem;
   }
 
   .detailGrid {

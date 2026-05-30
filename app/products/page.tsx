@@ -18,9 +18,10 @@ function getCardImage(title: string) {
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const requestedPole = searchParams.get('pole');
-  const activePole = poles.some((pole) => pole.slug === requestedPole) ? requestedPole : poles[0]?.slug ?? '';
-  const selectedPole = poles.find((pole) => pole.slug === activePole) ?? poles[0];
-  const visibleProducts = products.filter((product) => product.pole === activePole);
+  const selectedPole = poles.find((pole) => pole.slug === requestedPole);
+  const visibleProducts = selectedPole ? products.filter((product) => product.pole === selectedPole.slug) : products;
+  const categoryLabel = selectedPole?.label ?? 'Toutes les catégories';
+  const categoryDescription = selectedPole?.shortDescription ?? 'Tous les produits ADRO BIO FARM sont affichés ensemble.';
 
   return (
     <main>
@@ -29,12 +30,12 @@ export default function ProductsPage() {
           <div className="catalogHeader">
             <div>
               <p className="eyebrow">Catalogue produit</p>
-              <h2>{selectedPole.label}</h2>
-              <p className="sectionLead">Voyez un domaine à la fois pour rester clair et découvrir l’offre sans surcharge.</p>
+              <h2>{categoryLabel}</h2>
+              <p className="sectionLead">{categoryDescription}</p>
             </div>
             <div className="catalogMeta">
               <span>{visibleProducts.length} références</span>
-              <span className="catalogMetaLabel">{selectedPole.label}</span>
+              <span className="catalogMetaLabel">{categoryLabel}</span>
             </div>
           </div>
 

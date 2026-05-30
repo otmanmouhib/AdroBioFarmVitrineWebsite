@@ -1,44 +1,77 @@
-import ComingSoonPage from '../components/ComingSoonPage';
+import Link from 'next/link';
+import { newsPosts } from '../../data/news';
 
 export const metadata = {
   title: 'News - ADRO BIO FARM',
-  description: 'Page News en construction : un espace d’actualités moderne, mobile-first et professionnel sera bientôt disponible.',
+  description: 'Journal d’ADRO BIO FARM : actualités, perspectives et annonces sur la ferme, les formations et les projets durables.',
 };
 
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
 export default function NewsPage() {
+  const sortedPosts = [...newsPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   return (
-    <ComingSoonPage
-      pageLabel="News"
-      title="Page en construction"
-      intro="Cette page est actuellement en construction. Nous préparons une version élégante, professionnelle et mobile-first pour bientôt vous la présenter."
-      badges={['Coming soon', 'En construction', 'Mobile first']}
-      panelLabel="Travail en cours"
-      panelHeading="Un espace élégant et professionnel prend forme."
-      panelText="Nous finalisons une page cohérente avec la qualité globale d’ADRO BIO FARM, pensé pour le mobile et pour une lecture claire."
-      panelItems={[
-        'Design élégant et responsable',
-        'Structure mobile-first et fluide',
-        'Contenu simple, clair et professionnel',
-      ]}
-      features={[
-        {
-          title: 'Branding de confiance',
-          description: 'Un style cohérent et rassurant qui reflète la qualité de l’entreprise.',
-        },
-        {
-          title: 'Mobile-first',
-          description: 'Une interface fluide et lisible, même sur les petits écrans.',
-        },
-        {
-          title: 'Qualité professionnelle',
-          description: 'Une présentation sobre, raffinée et facile à parcourir.',
-        },
-      ]}
-      footerLabel="Bientôt disponible"
-      footerHeading="Merci pour votre patience"
-      footerText="Nous travaillons à finaliser cette page pour offrir une expérience de qualité, moderne et fiable."
-      primaryCta={{ href: '/contact', label: 'Nous contacter' }}
-      secondaryCta={{ href: '/who-we-are', label: 'En savoir plus' }}
-    />
+    <main>
+      <section className="section productCatalog">
+        <div className="container">
+          <div className="catalogHeader">
+            <div>
+              <p className="eyebrow">Actualités récentes</p>
+              <h2>Journal d’ADRO BIO FARM</h2>
+              <p className="sectionLead">Des articles structurés pour présenter nos projets, nos offres et nos temps forts dans un format professionnel et lisible.</p>
+            </div>
+            <div className="catalogMeta">
+              <span>{newsPosts.length} publications</span>
+              <span className="catalogMetaLabel">Dernières actualités</span>
+            </div>
+          </div>
+
+          <div className="itemGrid productCards">
+            {sortedPosts.map((post) => (
+              <article key={post.slug} className="catalogItem">
+                <div className="cardMedia">
+                  <img src={post.image} alt={post.title} />
+                </div>
+                <div className="itemHeader">
+                  <div>
+                    <h3>{post.title}</h3>
+                    <span className="detailBadge">{post.category}</span>
+                  </div>
+                </div>
+                <p>{post.excerpt}</p>
+                <div className="itemFooter">
+                  <span>{formatDate(post.date)}</span>
+                  <Link href={`/news/${post.slug}`} className="button secondary">
+                    Lire l’article
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section highlight contactCta">
+        <div className="container contactCtaContent">
+          <div className="contactCtaText">
+            <p className="eyebrow">Une question ?</p>
+            <h2>Contactez-nous pour en savoir plus sur nos projets et nos services.</h2>
+            <p>
+              Si vous souhaitez participer à nos programmes, recevoir un panier de saison ou organiser une visite, notre équipe est à votre écoute.
+            </p>
+          </div>
+          <Link href="/contact" className="button">
+            Nous contacter
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -31,37 +31,51 @@ function getIconForSlug(slug: string) {
 export default function HomePage() {
   return (
     <main>
-      <section className="hero">
+      <section className="hero heroLanding">
         <div className="container heroContent">
           <div className="heroIntro">
             <p className="eyebrow">Coopérative agroécologique</p>
-            <h1>Ferme durable, expériences pédagogiques et services responsables.</h1>
+            <h1>Ferme durable, services clairs et expériences pédagogiques.</h1>
             <p className="intro">
-              ADRO BIO FARM combine production locale, accueil engagé et formation pratique pour accompagner vos projets durables et citoyens.
+              Si vous cherchez des produits de la ferme, un projet écoresponsable ou une formation pratique, ADRO BIO FARM est l’endroit où commencer.
             </p>
 
-            <div className="heroBadges">
+            <div className="heroBadgeGroup">
               <span className="heroBadge">Local</span>
               <span className="heroBadge">Éthique</span>
               <span className="heroBadge">Engagé</span>
             </div>
 
             <div className="actions heroActions">
-              <Link href="/products" className="button">Découvrir les produits</Link>
-              <Link href="/contact" className="button secondary">Demander un devis</Link>
+              <Link href="/products" className="button primaryLarge">Découvrir les produits</Link>
+              <Link href="/contact" className="button secondaryLarge">Demander un devis</Link>
             </div>
           </div>
 
-          <aside className="heroPanel">
-            <p className="eyebrow">Ce que nous vous offrons</p>
-            <h2>Un parcours rapide vers l’essentiel.</h2>
-            <p className="heroPanelText">
-              Un site qui met en avant ce qui compte : des domaines métiers clairs, des offres identifiées et un accès direct à la commande ou au contact.
-            </p>
-            <ul className="heroPanelList">
+          <aside className="heroPanel heroPanelLanding">
+            <div>
+              <p className="eyebrow">Offre structurée</p>
+              <h2>Une proposition claire et engagée.</h2>
+              <p className="heroPanelText">
+                Trois types d’offres — produits, services et formations — présentés simplement, pour que vous trouviez rapidement ce qui correspond à votre projet durable.
+              </p>
+            </div>
+
+            <div className="heroPanelStats">
+              <div>
+                <strong>3 cibles</strong>
+                <span>Produits, services, formations</span>
+              </div>
+              <div>
+                <strong>7 domaines</strong>
+                <span>De la ferme à l’écologie</span>
+              </div>
+            </div>
+
+            <ul className="heroPanelList heroPanelListLanding">
               <li>Offres structurées par métier</li>
-              <li>Visibilité immédiate des produits et services</li>
-              <li>Un parcours simple pour agir</li>
+              <li>Choix rapides, impact durable</li>
+              <li>Commande ou contact direct</li>
             </ul>
           </aside>
         </div>
@@ -97,11 +111,7 @@ export default function HomePage() {
           </div>
           <div className="domainGrid">
             {poles.map((pole) => (
-              <Link
-                key={pole.slug}
-                href={`/products#${pole.slug}`}
-                className="domainCard"
-              >
+              <article key={pole.slug} className="domainCard">
                 <div className="domainCardHeader" style={{ backgroundColor: `${pole.color}22` }}>
                   <span className="domainIcon">{pole.icon}</span>
                 </div>
@@ -109,7 +119,7 @@ export default function HomePage() {
                   <h3>{pole.label}</h3>
                   <p>{pole.shortDescription}</p>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         </div>

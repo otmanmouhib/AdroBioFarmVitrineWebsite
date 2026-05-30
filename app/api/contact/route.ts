@@ -1,29 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || 'adrobiofarm';
 const collectionName = 'contacts';
 
-if (!uri) {
-  throw new Error('MONGODB_URI environment variable is not configured.');
-}
-
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+let clientPromise: Promise<MongoClient> | undefined;
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if (!global._mongoClientPromise) {
-  client = new MongoClient(uri);
-  global._mongoClientPromise = client.connect();
+function getClientPromise() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is not configured.');
+  }
+
+  if (!global._mongoClientPromise) {
+    const client = new MongoClient(uri);
+    global._mongoClientPromise = client.connect();
+  }
+
+  return global._mongoClientPromise;
 }
 
-clientPromise = global._mongoClientPromise;
-
 export async function POST(request: NextRequest) {
+  const clientPromise = getClientPromise();
   const body = await request.json();
   const { name, email, subject, message } = body;
 

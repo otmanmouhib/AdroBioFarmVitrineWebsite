@@ -1,44 +1,113 @@
-import ComingSoonPage from '../components/ComingSoonPage';
+'use client';
 
-export const metadata = {
-  title: 'Boutique - ADRO BIO FARM',
-  description: 'Page Boutique en construction : un espace élégant, mobile-first et professionnel sera disponible bientôt.',
-};
+import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { boutiqueCategories, boutiqueProducts } from '../../data/boutique';
+
+function formatPrice(price?: number) {
+  if (price === undefined) return 'Prix sur demande';
+  return `${price.toLocaleString('fr-FR')} DH`;
+}
+
+const PAGE_SIZE = 6;
 
 export default function BoutiquePage() {
+  const searchParams = useSearchParams();
+  const requestedCategory = searchParams.get('category');
+  const selectedCategory = boutiqueCategories.find((category) => category.slug === requestedCategory);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [requestedCategory]);
+
+  const visibleProducts = useMemo(() => {
+    if (!selectedCategory) return boutiqueProducts;
+    return boutiqueProducts.filter((product) => product.category === selectedCategory.slug);
+  }, [selectedCategory]);
+
+  const pageCount = Math.max(1, Math.ceil(visibleProducts.length / PAGE_SIZE));
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibleProducts.slice(start, start + PAGE_SIZE);
+  }, [visibleProducts, currentPage]);
+
+  const subtitle = selectedCategory ? selectedCategory.description : 'Découvrez tous nos accessoires, équipements et produits fermiers disponibles en boutique.';
+  const activeLabel = selectedCategory ? selectedCategory.label : 'Toutes les catégories';
+
   return (
-    <ComingSoonPage
-      pageLabel="Boutique"
-      title="Page en construction"
-      intro="Cette page est actuellement en construction. Nous préparons une version élégante, professionnelle et mobile-first pour bientôt vous la présenter."
-      badges={['Coming soon', 'En construction', 'Mobile first']}
-      panelLabel="Travail en cours"
-      panelHeading="Un espace élégant et professionnel prend forme."
-      panelText="Nous finalisons une page cohérente avec la qualité globale d’ADRO BIO FARM, pensé pour le mobile et pour une lecture claire."
-      panelItems={[
-        'Design élégant et responsable',
-        'Structure mobile-first et fluide',
-        'Contenu simple, clair et professionnel',
-      ]}
-      features={[
-        {
-          title: 'Branding de confiance',
-          description: 'Un style cohérent et rassurant qui reflète la qualité de l’entreprise.',
-        },
-        {
-          title: 'Mobile-first',
-          description: 'Une interface fluide et lisible, même sur les petits écrans.',
-        },
-        {
-          title: 'Qualité professionnelle',
-          description: 'Une présentation sobre, raffinée et facile à parcourir.',
-        },
-      ]}
-      footerLabel="Bientôt disponible"
-      footerHeading="Merci pour votre patience"
-      footerText="Nous travaillons à finaliser cette page pour offrir une expérience de qualité, moderne et fiable."
-      primaryCta={{ href: '/contact', label: 'Nous contacter' }}
-      secondaryCta={{ href: '/who-we-are', label: 'En savoir plus' }}
-    />
+    <main>
+      <section className="section productCatalog">
+        <div className="container">
+          <div className="catalogHeader">
+            <div>
+              <p className="eyebrow">Boutique</p>
+              <h2>{activeLabel}</h2>
+              <p className="sectionLead">{subtitle}</p>
+            </div>
+            <div className="catalogMeta">
+              <span>{visibleProducts.length} références</span>
+              <span className="catalogMetaLabel">{activeLabel}</span>
+            </div>
+          </div>
+
+          <div className="itemGrid productCards">
+            {paginatedProducts.map((product) => (
+              <article key={product.slug} className="catalogItem">
+                <div className="cardMedia">
+                  <img src={product.image} alt={product.title} />
+                </div>
+                <div className="itemHeader">
+                  <div>
+                    <h3>{product.title}</h3>
+                    <span className="detailBadge">{product.subcategory}</span>
+                  </div>
+                  <span className={`stockLabel ${product.stock === 'in-stock' ? 'inStock' : product.stock === 'rupture' ? 'outOfStock' : 'onDemand'}`}>
+                    {product.stock === 'in-stock' ? 'En stock' : product.stock === 'rupture' ? 'Rupture de stock' : 'Sur demande'}
+                  </span>
+                </div>
+                <p>{product.excerpt}</p>
+                <div className="itemFooter boutiqueFooter">
+                  <span className="priceTag">{formatPrice(product.price)}</span>
+                  <div className="boutiqueActions">
+                    <Link href={`/boutique/${product.slug}`} className="button secondary">
+                      Détails
+                    </Link>
+                    <Link href="/contact" className="button">
+                      Commander
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {pageCount > 1 && (
+            <div className="paginationControls">
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}
+                disabled={currentPage === 1}
+              >
+                Précédent
+              </button>
+              <span>
+                Page {currentPage} sur {pageCount}
+              </span>
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => setCurrentPage((current) => Math.min(pageCount, current + 1))}
+                disabled={currentPage === pageCount}
+              >
+                Suivant
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }

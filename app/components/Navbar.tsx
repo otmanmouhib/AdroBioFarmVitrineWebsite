@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { poles } from '../../data/poles';
+import { boutiqueCategories } from '../../data/boutique';
 
 const productPanes = poles.map((pole) => ({
   href: `/products?pole=${pole.slug}`,
@@ -13,6 +14,11 @@ const productPanes = poles.map((pole) => ({
 const servicePanes = poles.map((pole) => ({
   href: `/services?pole=${pole.slug}`,
   label: `${pole.icon} ${pole.label}`,
+}));
+
+const boutiquePanes = boutiqueCategories.map((category) => ({
+  href: `/boutique?category=${category.slug}`,
+  label: `${category.icon} ${category.label}`,
 }));
 
 const navItems = [
@@ -27,7 +33,11 @@ const navItems = [
     label: 'Services',
     children: servicePanes,
   },
-  { href: '/boutique', label: 'Boutique' },
+  {
+    href: '/boutique',
+    label: 'Boutique',
+    children: boutiquePanes,
+  },
   { href: '/news', label: 'News' },
   { href: '/references', label: 'Références' },
   { href: '/certifications', label: 'Certifications' },
