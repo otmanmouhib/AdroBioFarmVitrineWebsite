@@ -1,20 +1,19 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import TagList from '../../components/TagList';
-import { poles } from '../../../data/poles';
-import { services } from '../../../data/services';
-import { products } from '../../../data/products';
-import { serviceTags } from '../../../data/serviceTags';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { normalizeDbImageSrc } from '../../../lib/image';
+import { getPoles, getProducts, getServiceBySlug, getServices } from '../../../lib/db';
 
 type PageParams = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const services = await getServices();
   return services.map((service) => ({ slug: service.slug }));
 }
 
-export async function generateMetadata({ params }: PageParams) {
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params;
-  const service = services.find((item) => item.slug === slug);
+  const service = await getServiceBySlug(slug);
 
   if (!service) {
     return { title: 'Service introuvable', description: 'Service non trouvé sur ADRO BIO FARM.' };
@@ -28,24 +27,34 @@ export async function generateMetadata({ params }: PageParams) {
 
 export default async function ServiceDetailPage({ params }: PageParams) {
   const { slug } = await params;
-  const service = services.find((item) => item.slug === slug);
+  const service = await getServiceBySlug(slug);
 
   if (!service) {
     notFound();
   }
 
+  const [poles, relatedProducts] = await Promise.all([
+    getPoles(),
+    getProducts(undefined, service.domain),
+  ]);
+
   const pole = poles.find((item) => item.slug === service.pole);
-  const relatedProducts = products.filter((product) => product.pole === service.pole).slice(0, 3);
+  const domain = pole?.domains.find((domainItem) => domainItem.slug === service.domain);
 
   return (
     <main>
       <section className="section hero detailHero">
         <div className="container heroContent">
           <div className="heroIntro">
-            <span className="detailBadge">{service.category}</span>
+            <span className="detailBadge">{domain?.label ?? service.category}</span>
             <p className="eyebrow">Service</p>
             <h1>{service.title}</h1>
             <p className="intro">{service.description}</p>
+            <div className="heroActions heroActionsCompact">
+              <Link href={`/services?pole=${encodeURIComponent(service.pole)}&domain=${encodeURIComponent(service.domain)}`} className="button secondary small">
+                Voir plus de {domain?.label ?? service.category}
+              </Link>
+            </div>
             <div className="chips">
               {service.methodology.slice(0, 3).map((item) => (
                 <span key={item} className="tagChip">
@@ -61,7 +70,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
 
           <div className="detailGallery">
             {service.image ? (
-              <img src={service.image} alt={service.title} />
+              <img src={normalizeDbImageSrc(service.image)} alt={service.title} />
             ) : (
               <div className="galleryPlaceholder">
                 <span>📷</span>
@@ -94,7 +103,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           <div className="itemCard detailSidebar">
             <h3>Informations clés</h3>
             <p><strong>Catalogue :</strong> {pole?.label ?? 'ADRO BIO FARM'}</p>
-            <p><strong>Type :</strong> {service.category}</p>
+            <p><strong>Domaine :</strong> {domain?.label ?? service.category}</p>
             {service.duration && <p><strong>Durée :</strong> {service.duration}</p>}
             {service.audience && <p><strong>Public :</strong> {service.audience}</p>}
             <div className="detailFooter">

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { newsPosts } from '../../../data/news';
+import { normalizeDbImageSrc } from '../../../lib/image';
+import { getNewsPostBySlug, getNewsPosts } from '../../../lib/db';
 
 function getCardImage(title: string) {
   return `https://placehold.co/1200x700/eaf1e1/3b4f35?text=${encodeURIComponent(title)}`;
@@ -10,12 +11,13 @@ function getCardImage(title: string) {
 type PageParams = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return newsPosts.map((post) => ({ slug: post.slug }));
+  const posts = await getNewsPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params;
-  const post = newsPosts.find((item) => item.slug === slug);
+  const post = await getNewsPostBySlug(slug);
 
   if (!post) {
     return {
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 
 export default async function NewsPostPage({ params }: PageParams) {
   const { slug } = await params;
-  const post = newsPosts.find((item) => item.slug === slug);
+  const post = await getNewsPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -47,6 +49,11 @@ export default async function NewsPostPage({ params }: PageParams) {
             <span className="detailBadge">{post.category}</span>
             <h1>{post.title}</h1>
             <p className="intro">{post.summary}</p>
+            <div className="heroActions heroActionsCompact">
+              <Link href={`/news?category=${encodeURIComponent(post.category)}`} className="button secondary small">
+                Voir plus d’articles {post.category}
+              </Link>
+            </div>
             <div className="heroBadges">
               <span className="heroBadge">Publié le {new Date(post.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
             </div>
@@ -59,7 +66,11 @@ export default async function NewsPostPage({ params }: PageParams) {
 
           <div className="heroPanel">
             <div className="heroPanelImage">
-              <img src={post.image ?? getCardImage(post.title)} alt={post.title} />
+              {post.image ? (
+                <img src={normalizeDbImageSrc(post.image)} alt={post.title} />
+              ) : (
+                <img src={getCardImage(post.title)} alt={post.title} />
+              )}
             </div>
           </div>
         </div>

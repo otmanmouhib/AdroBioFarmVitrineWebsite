@@ -104,7 +104,7 @@ export default function HomePage() {
       <section className="section highlight">
         <div className="container">
           <div className="sectionIntro">
-            <h2>Nos domaines d’activité</h2>
+            <h2>Nos pôles d’activité</h2>
             <p className="sectionLead">
               Sept pôles d’expertise pour structurer notre offre : production, végétal, pépinière, formation, hébergement, événementiel et écologie.
             </p>
@@ -118,6 +118,9 @@ export default function HomePage() {
                 <div className="domainCardBody">
                   <h3>{pole.label}</h3>
                   <p>{pole.shortDescription}</p>
+                  <Link href={`/products?pole=${pole.slug}`} className="button secondary">
+                    Explorer ce pôle
+                  </Link>
                 </div>
               </article>
             ))}

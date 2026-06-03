@@ -1,10 +1,20 @@
 import Link from 'next/link';
-import { newsPosts } from '../../data/news';
+import { normalizeDbImageSrc } from '../../lib/image';
+import { getNewsPosts } from '../../lib/db';
+import type { NewsPost } from '../../data/news';
 
 export const metadata = {
   title: 'News - ADRO BIO FARM',
   description: 'Journal d’ADRO BIO FARM : actualités, perspectives et annonces sur la ferme, les formations et les projets durables.',
 };
+
+type NewsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function extractParam(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -14,7 +24,12 @@ function formatDate(dateString: string) {
   });
 }
 
-export default function NewsPage() {
+export default async function NewsPage({ searchParams }: NewsPageProps) {
+  const params = await searchParams;
+  const requestedCategory = extractParam(params?.category) ?? null;
+  const newsPosts = requestedCategory
+    ? (await getNewsPosts()).filter((post) => post.category === requestedCategory)
+    : await getNewsPosts();
   const sortedPosts = [...newsPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
@@ -37,7 +52,7 @@ export default function NewsPage() {
             {sortedPosts.map((post) => (
               <article key={post.slug} className="catalogItem">
                 <div className="cardMedia">
-                  <img src={post.image} alt={post.title} />
+                  <img src={normalizeDbImageSrc(post.image) ?? ''} alt={post.title} />
                 </div>
                 <div className="itemHeader">
                   <div>

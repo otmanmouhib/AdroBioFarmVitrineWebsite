@@ -1,38 +1,32 @@
-'use client';
-
-import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { boutiqueCategories, boutiqueProducts } from '../../data/boutique';
+import { normalizeDbImageSrc } from '../../lib/image';
+import { getBoutiqueCategories, getBoutiqueProducts } from '../../lib/db';
+
+const PAGE_SIZE = 6;
+
+function extractParam(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
 
 function formatPrice(price?: number) {
   if (price === undefined) return 'Prix sur demande';
   return `${price.toLocaleString('fr-FR')} DH`;
 }
 
-const PAGE_SIZE = 6;
+export default async function BoutiquePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
+  const requestedCategory = extractParam(params?.category) ?? null;
+  const requestedSubcategory = extractParam(params?.subcategory) ?? null;
+  const currentPage = Math.max(1, Number(extractParam(params?.page) ?? 1));
 
-export default function BoutiquePage() {
-  const searchParams = useSearchParams();
-  const requestedCategory = searchParams.get('category');
+  const [boutiqueCategories, boutiqueProducts] = await Promise.all([
+    getBoutiqueCategories(),
+    getBoutiqueProducts(requestedCategory, requestedSubcategory),
+  ]);
+
   const selectedCategory = boutiqueCategories.find((category) => category.slug === requestedCategory);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [requestedCategory]);
-
-  const visibleProducts = useMemo(() => {
-    if (!selectedCategory) return boutiqueProducts;
-    return boutiqueProducts.filter((product) => product.category === selectedCategory.slug);
-  }, [selectedCategory]);
-
-  const pageCount = Math.max(1, Math.ceil(visibleProducts.length / PAGE_SIZE));
-  const paginatedProducts = useMemo(() => {
-    const start = (currentPage - 1) * PAGE_SIZE;
-    return visibleProducts.slice(start, start + PAGE_SIZE);
-  }, [visibleProducts, currentPage]);
-
+  const pageCount = Math.max(1, Math.ceil(boutiqueProducts.length / PAGE_SIZE));
+  const paginatedProducts = boutiqueProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const subtitle = selectedCategory ? selectedCategory.description : 'Découvrez tous nos accessoires, équipements et produits fermiers disponibles en boutique.';
   const activeLabel = selectedCategory ? selectedCategory.label : 'Toutes les catégories';
 
@@ -47,7 +41,7 @@ export default function BoutiquePage() {
               <p className="sectionLead">{subtitle}</p>
             </div>
             <div className="catalogMeta">
-              <span>{visibleProducts.length} références</span>
+              <span>{boutiqueProducts.length} références</span>
               <span className="catalogMetaLabel">{activeLabel}</span>
             </div>
           </div>
@@ -56,7 +50,7 @@ export default function BoutiquePage() {
             {paginatedProducts.map((product) => (
               <article key={product.slug} className="catalogItem">
                 <div className="cardMedia">
-                  <img src={product.image} alt={product.title} />
+                  <img src={normalizeDbImageSrc(product.image) ?? ''} alt={product.title} />
                 </div>
                 <div className="itemHeader">
                   <div>
@@ -85,25 +79,21 @@ export default function BoutiquePage() {
 
           {pageCount > 1 && (
             <div className="paginationControls">
-              <button
-                type="button"
+              <Link
+                href={`/boutique?category=${requestedCategory ?? ''}&subcategory=${requestedSubcategory ?? ''}&page=${Math.max(1, currentPage - 1)}`}
                 className="button secondary"
-                onClick={() => setCurrentPage((current) => Math.max(1, current - 1))}
-                disabled={currentPage === 1}
               >
                 Précédent
-              </button>
+              </Link>
               <span>
                 Page {currentPage} sur {pageCount}
               </span>
-              <button
-                type="button"
+              <Link
+                href={`/boutique?category=${requestedCategory ?? ''}&subcategory=${requestedSubcategory ?? ''}&page=${Math.min(pageCount, currentPage + 1)}`}
                 className="button secondary"
-                onClick={() => setCurrentPage((current) => Math.min(pageCount, current + 1))}
-                disabled={currentPage === pageCount}
               >
                 Suivant
-              </button>
+              </Link>
             </div>
           )}
         </div>

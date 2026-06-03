@@ -1,23 +1,25 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import TagList from '../../components/TagList';
-import { poles } from '../../../data/poles';
-import { products } from '../../../data/products';
-import { services } from '../../../data/services';
-import { productTags } from '../../../data/productTags';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { normalizeDbImageSrc } from '../../../lib/image';
+import { getPoles, getProductBySlug, getProducts, getServices } from '../../../lib/db';
 
 type PageParams = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const products = await getProducts();
   return products.map((product) => ({ slug: product.slug }));
 }
 
-export async function generateMetadata({ params }: PageParams) {
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
-    return { title: 'Produit introuvable', description: 'Produit non trouvé sur ADRO BIO FARM.' };
+    return {
+      title: 'Produit introuvable',
+      description: 'Produit non trouvé sur ADRO BIO FARM.',
+    };
   }
 
   return {
@@ -28,24 +30,34 @@ export async function generateMetadata({ params }: PageParams) {
 
 export default async function ProductDetailPage({ params }: PageParams) {
   const { slug } = await params;
-  const product = products.find((item) => item.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
+  const [poles, relatedServices] = await Promise.all([
+    getPoles(),
+    getServices(undefined, product.domain),
+  ]);
+
   const pole = poles.find((item) => item.slug === product.pole);
-  const relatedServices = services.filter((service) => service.pole === product.pole).slice(0, 3);
+  const domain = pole?.domains.find((domainItem) => domainItem.slug === product.domain);
 
   return (
     <main>
       <section className="section hero detailHero">
         <div className="container heroContent">
           <div className="heroIntro">
-            <span className="detailBadge">{product.category}</span>
+            <span className="detailBadge">{domain?.label ?? product.category}</span>
             <p className="eyebrow">Produit</p>
             <h1>{product.title}</h1>
             <p className="intro">{product.description}</p>
+            <div className="heroActions heroActionsCompact">
+              <Link href={`/products?pole=${encodeURIComponent(product.pole)}&domain=${encodeURIComponent(product.domain)}`} className="button secondary small">
+                Voir plus de {domain?.label ?? product.category}
+              </Link>
+            </div>
             <div className="chips">
               {product.features.map((feature) => (
                 <span key={feature} className="tagChip">
@@ -61,7 +73,7 @@ export default async function ProductDetailPage({ params }: PageParams) {
 
           <div className="detailGallery">
             {product.image ? (
-              <img src={product.image} alt={product.title} />
+              <img src={normalizeDbImageSrc(product.image)} alt={product.title} />
             ) : (
               <div className="galleryPlaceholder">
                 <span>📦</span>
@@ -90,7 +102,7 @@ export default async function ProductDetailPage({ params }: PageParams) {
           <div className="itemCard detailSidebar">
             <h3>Informations clés</h3>
             <p><strong>Catalogue :</strong> {pole?.label ?? 'ADRO BIO FARM'}</p>
-            <p><strong>Type :</strong> {product.category}</p>
+            <p><strong>Domaine :</strong> {domain?.label ?? product.category}</p>
             <p><strong>Commande :</strong> par contact uniquement</p>
             <div className="detailFooter">
               <Link href="/contact" className="button secondary">Contacter pour une commande</Link>

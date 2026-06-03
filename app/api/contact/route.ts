@@ -4,11 +4,9 @@ import { MongoClient } from 'mongodb';
 const dbName = process.env.MONGODB_DB || 'adrobiofarm';
 const collectionName = 'contacts';
 
-let clientPromise: Promise<MongoClient> | undefined;
-
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-}
+const globalWithMongo = globalThis as typeof globalThis & {
+  _mongoClientPromise?: Promise<MongoClient>;
+};
 
 function getClientPromise() {
   const uri = process.env.MONGODB_URI;
@@ -16,12 +14,12 @@ function getClientPromise() {
     throw new Error('MONGODB_URI environment variable is not configured.');
   }
 
-  if (!global._mongoClientPromise) {
+  if (!globalWithMongo._mongoClientPromise) {
     const client = new MongoClient(uri);
-    global._mongoClientPromise = client.connect();
+    globalWithMongo._mongoClientPromise = client.connect();
   }
 
-  return global._mongoClientPromise;
+  return globalWithMongo._mongoClientPromise;
 }
 
 export async function POST(request: NextRequest) {

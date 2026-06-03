@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
     "mongodb": "^7.2.0",
@@ -21,6 +22,8 @@
     "@types/react-dom": "18.3.4",
     "eslint": "8.57.0",
     "eslint-config-next": "15.5.18",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "tsx": "^4.18.0",
+    "dotenv": "^16.4.0"
   }
 }

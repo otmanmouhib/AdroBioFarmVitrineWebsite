@@ -13,8 +13,21 @@ function findPoleLabel(slug: string | null) {
   return poles.find((pole) => pole.slug === slug)?.label;
 }
 
+function findDomainLabel(slug: string | null) {
+  return slug
+    ? poles.flatMap((pole) => pole.domains).find((domain) => domain.slug === slug)?.label
+    : undefined;
+}
+
 function findCategoryLabel(slug: string | null) {
   return boutiqueCategories.find((category) => category.slug === slug)?.label;
+}
+
+function buildListHref(base: string, pole?: string | null, domain?: string | null) {
+  const params = new URLSearchParams();
+  if (pole) params.set('pole', pole);
+  if (domain) params.set('domain', domain);
+  return `${base}${params.toString() ? `?${params.toString()}` : ''}`;
 }
 
 export default function Breadcrumb() {
@@ -35,10 +48,24 @@ export default function Breadcrumb() {
 
     if (first === 'products') {
       items.push({ href: '/products', label: 'Produits' });
-      const pole = searchParams.get('pole');
+      const queryPole = searchParams.get('pole');
+      const queryDomain = searchParams.get('domain');
+      let pole = queryPole;
+      let domain = queryDomain;
+      if (second) {
+        const product = products.find((item) => item.slug === second);
+        if (product) {
+          if (!pole) pole = product.pole;
+          if (!domain) domain = product.domain;
+        }
+      }
       const poleLabel = findPoleLabel(pole);
       if (poleLabel) {
-        items.push({ href: `/products?pole=${pole}`, label: poleLabel });
+        items.push({ href: buildListHref('/products', pole), label: poleLabel });
+      }
+      const domainLabel = findDomainLabel(domain);
+      if (domainLabel) {
+        items.push({ href: buildListHref('/products', pole, domain), label: domainLabel });
       }
       if (second) {
         const product = products.find((item) => item.slug === second);
@@ -51,10 +78,24 @@ export default function Breadcrumb() {
 
     if (first === 'services') {
       items.push({ href: '/services', label: 'Services' });
-      const pole = searchParams.get('pole');
+      const queryPole = searchParams.get('pole');
+      const queryDomain = searchParams.get('domain');
+      let pole = queryPole;
+      let domain = queryDomain;
+      if (second) {
+        const service = services.find((item) => item.slug === second);
+        if (service) {
+          if (!pole) pole = service.pole;
+          if (!domain) domain = service.domain;
+        }
+      }
       const poleLabel = findPoleLabel(pole);
       if (poleLabel) {
-        items.push({ href: `/services?pole=${pole}`, label: poleLabel });
+        items.push({ href: buildListHref('/services', pole), label: poleLabel });
+      }
+      const domainLabel = findDomainLabel(domain);
+      if (domainLabel) {
+        items.push({ href: buildListHref('/services', pole, domain), label: domainLabel });
       }
       if (second) {
         const service = services.find((item) => item.slug === second);

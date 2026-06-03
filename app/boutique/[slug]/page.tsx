@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { boutiqueProducts } from '../../../data/boutique';
+import { normalizeDbImageSrc } from '../../../lib/image';
+import { getBoutiqueProductBySlug, getBoutiqueProducts } from '../../../lib/db';
 
 type PageParams = { params: Promise<{ slug: string }> };
 
@@ -10,13 +11,14 @@ function formatPrice(price?: number) {
   return `${price.toLocaleString('fr-FR')} DH`;
 }
 
-export function generateStaticParams() {
-  return boutiqueProducts.map((product) => ({ slug: product.slug }));
+export async function generateStaticParams() {
+  const products = await getBoutiqueProducts();
+  return products.map((product) => ({ slug: product.slug }));
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const { slug } = await params;
-  const product = boutiqueProducts.find((item) => item.slug === slug);
+  const product = await getBoutiqueProductBySlug(slug);
 
   if (!product) {
     return {
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 
 export default async function BoutiqueProductPage({ params }: PageParams) {
   const { slug } = await params;
-  const product = boutiqueProducts.find((item) => item.slug === slug);
+  const product = await getBoutiqueProductBySlug(slug);
 
   if (!product) {
     notFound();
@@ -48,6 +50,14 @@ export default async function BoutiqueProductPage({ params }: PageParams) {
             <span className="detailBadge">{product.subcategory}</span>
             <h1>{product.title}</h1>
             <p className="intro">{product.excerpt}</p>
+            <div className="heroActions heroActionsCompact">
+              <Link
+                href={`/boutique?category=${encodeURIComponent(product.category)}&subcategory=${encodeURIComponent(product.subcategory)}`}
+                className="button secondary small"
+              >
+                Voir plus de {product.subcategory}
+              </Link>
+            </div>
             <div className="heroBadges">
               <span className={`stockLabel ${product.stock === 'in-stock' ? 'inStock' : product.stock === 'rupture' ? 'outOfStock' : 'onDemand'}`}>
                 {product.stock === 'in-stock' ? 'En stock' : product.stock === 'rupture' ? 'Rupture de stock' : 'Sur demande'}
@@ -66,7 +76,7 @@ export default async function BoutiqueProductPage({ params }: PageParams) {
 
           <div className="heroPanel">
             <div className="heroPanelImage">
-              <img src={product.image} alt={product.title} />
+              <img src={normalizeDbImageSrc(product.image) ?? ''} alt={product.title} />
             </div>
           </div>
         </div>

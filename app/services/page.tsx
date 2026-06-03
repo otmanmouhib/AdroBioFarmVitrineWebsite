@@ -1,13 +1,21 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import TagList from '../components/TagList';
-import { poles } from '../../data/poles';
-import { services } from '../../data/services';
+import { normalizeDbImageSrc } from '../../lib/image';
+import { getPoles, getServices } from '../../lib/db';
+import type { Pole } from '../../data/poles';
 import { serviceTags } from '../../data/serviceTags';
 
-function getPoleIcon(slug: string) {
+function extractParam(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function findDomainLabel(poles: Pole[], slug: string | null | undefined) {
+  return slug
+    ? poles.flatMap((pole) => pole.domains).find((domain) => domain.slug === slug)?.label
+    : undefined;
+}
+
+function getPoleIcon(poles: Pole[], slug: string) {
   return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
 }
 
@@ -15,13 +23,23 @@ function getCardImage(title: string) {
   return `https://placehold.co/600x420/f0faf5/3b4f35?text=${encodeURIComponent(title)}`;
 }
 
-export default function ServicesPage() {
-  const searchParams = useSearchParams();
-  const requestedPole = searchParams.get('pole');
+export default async function ServicesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
+  const requestedPole = extractParam(params?.pole) ?? null;
+  const requestedDomain = extractParam(params?.domain) ?? null;
+  const [poles, services] = await Promise.all([
+    getPoles(),
+    getServices(requestedPole, requestedDomain),
+  ]);
+
   const selectedPole = poles.find((pole) => pole.slug === requestedPole);
-  const visibleServices = selectedPole ? services.filter((service) => service.pole === selectedPole.slug) : services;
-  const categoryLabel = selectedPole?.label ?? 'Toutes les catégories';
-  const categoryDescription = selectedPole?.shortDescription ?? 'Tous les services ADRO BIO FARM sont affichés ensemble.';
+  const selectedDomainLabel = findDomainLabel(poles, requestedDomain);
+  const categoryLabel = selectedDomainLabel ?? selectedPole?.label ?? 'Toutes les catégories';
+  const categoryDescription = selectedDomainLabel
+    ? `Services ${selectedDomainLabel}${selectedPole ? ` dans le pôle ${selectedPole.label}` : ''}.`
+    : selectedPole?.shortDescription ?? 'Tous les services ADRO BIO FARM sont affichés ensemble.';
+
+  const visibleServices = services;
 
   return (
     <main>
@@ -43,13 +61,13 @@ export default function ServicesPage() {
             {visibleServices.map((service) => (
               <article key={service.slug} className="itemCard catalogItem">
                 <div className="cardMedia">
-                  <img src={service.image ?? getCardImage(service.title)} alt={service.title} />
+                  <img src={normalizeDbImageSrc(service.image) ?? getCardImage(service.title)} alt={service.title} />
                 </div>
                 <div className="itemHeader">
-                  <span className="cardIcon small">{getPoleIcon(service.pole)}</span>
+                  <span className="cardIcon small">{getPoleIcon(poles, service.pole)}</span>
                   <div>
                     <h3>{service.title}</h3>
-                    <span className="detailBadge">{service.category}</span>
+                    <span className="detailBadge">{findDomainLabel(poles, service.domain) ?? service.category}</span>
                   </div>
                 </div>
                 <p>{service.description}</p>
