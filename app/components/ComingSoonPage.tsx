@@ -68,6 +68,25 @@ export default function ComingSoonPage({
         </div>
       </section>
 
+      {features.length > 0 && (
+        <section className="section featureHighlights">
+          <div className="container">
+            <div className="sectionIntro">
+              <h2>Ce qui arrive bientôt</h2>
+              <p className="sectionLead">Nous concevons une page claire, utile et alignée sur l’identité d’ADRO BIO FARM.</p>
+            </div>
+            <div className="featureCardGrid">
+              {features.map((feature) => (
+                <article key={feature.title} className="featureCard">
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="section highlight referenceFooterCard">
         <div className="container referenceFooterContent">
           <div>

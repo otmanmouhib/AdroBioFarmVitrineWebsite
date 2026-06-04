@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -67,9 +68,23 @@ export default async function NewsPostPage({ params }: PageParams) {
           <div className="heroPanel">
             <div className="heroPanelImage">
               {post.image ? (
-                <img src={normalizeDbImageSrc(post.image)} alt={post.title} />
+                <Image
+                  src={normalizeDbImageSrc(post.image) ?? getCardImage(post.title)}
+                  alt={post.title}
+                  width={1200}
+                  height={700}
+                  className="detailImage"
+                  unoptimized
+                />
               ) : (
-                <img src={getCardImage(post.title)} alt={post.title} />
+                <Image
+                  src={getCardImage(post.title)}
+                  alt={post.title}
+                  width={1200}
+                  height={700}
+                  className="detailImage"
+                  unoptimized
+                />
               )}
             </div>
           </div>

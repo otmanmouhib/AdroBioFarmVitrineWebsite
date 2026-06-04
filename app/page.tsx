@@ -24,10 +24,6 @@ const trustPoints = [
   },
 ];
 
-function getIconForSlug(slug: string) {
-  return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
-}
-
 export default function HomePage() {
   return (
     <main>

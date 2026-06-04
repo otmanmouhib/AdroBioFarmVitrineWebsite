@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { normalizeDbImageSrc } from '../../lib/image';
 import { getBoutiqueCategories, getBoutiqueProducts } from '../../lib/db';
@@ -50,7 +51,14 @@ export default async function BoutiquePage({ searchParams }: { searchParams: Pro
             {paginatedProducts.map((product) => (
               <article key={product.slug} className="catalogItem">
                 <div className="cardMedia">
-                  <img src={normalizeDbImageSrc(product.image) ?? ''} alt={product.title} />
+                  <Image
+                    src={normalizeDbImageSrc(product.image) ?? 'https://placehold.co/600x420/f0faf5/3b4f35?text=Produit'}
+                    alt={product.title}
+                    width={420}
+                    height={320}
+                    className="cardImage"
+                    unoptimized
+                  />
                 </div>
                 <div className="itemHeader">
                   <div>

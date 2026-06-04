@@ -1,7 +1,7 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { normalizeDbImageSrc } from '../../lib/image';
 import { getNewsPosts } from '../../lib/db';
-import type { NewsPost } from '../../data/news';
 
 export const metadata = {
   title: 'News - ADRO BIO FARM',
@@ -52,7 +52,14 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             {sortedPosts.map((post) => (
               <article key={post.slug} className="catalogItem">
                 <div className="cardMedia">
-                  <img src={normalizeDbImageSrc(post.image) ?? ''} alt={post.title} />
+                  <Image
+                    src={normalizeDbImageSrc(post.image) ?? 'https://placehold.co/600x420/f0faf5/3b4f35?text=Article'}
+                    alt={post.title}
+                    width={420}
+                    height={280}
+                    className="cardImage"
+                    unoptimized
+                  />
                 </div>
                 <div className="itemHeader">
                   <div>

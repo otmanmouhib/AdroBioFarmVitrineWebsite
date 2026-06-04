@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -73,7 +74,14 @@ export default async function ProductDetailPage({ params }: PageParams) {
 
           <div className="detailGallery">
             {product.image ? (
-              <img src={normalizeDbImageSrc(product.image)} alt={product.title} />
+              <Image
+                src={normalizeDbImageSrc(product.image) ?? 'https://placehold.co/900x540/eaf1e1/3b4f35?text=Produit'}
+                alt={product.title}
+                width={900}
+                height={540}
+                className="detailImage"
+                unoptimized
+              />
             ) : (
               <div className="galleryPlaceholder">
                 <span>📦</span>

@@ -34,7 +34,7 @@ export default function ContactPage() {
       setSubject('');
       setMessage('');
       setStatus('success');
-    } catch (err) {
+    } catch {
       setError('Impossible d’envoyer le message pour le moment.');
       setStatus('error');
     }

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import TagList from '../components/TagList';
 import { normalizeDbImageSrc } from '../../lib/image';
@@ -61,7 +62,14 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             {visibleProducts.map((product) => (
               <article key={product.slug} className="itemCard catalogItem">
                 <div className="cardMedia">
-                  <img src={normalizeDbImageSrc(product.image) ?? getCardImage(product.title)} alt={product.title} />
+                  <Image
+                    src={normalizeDbImageSrc(product.image) ?? getCardImage(product.title)}
+                    alt={product.title}
+                    width={420}
+                    height={280}
+                    className="cardImage"
+                    unoptimized
+                  />
                 </div>
                 <div className="itemHeader">
                   <span className="cardIcon small">{getPoleIcon(poles, product.pole)}</span>
