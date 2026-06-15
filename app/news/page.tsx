@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { normalizeDbImageSrc } from '../../lib/image';
-import { getNewsPosts } from '../../lib/db';
+import { getNewsCategories, getNewsPosts } from '../../lib/db';
+import type { NewsCategory } from '../../data/news';
 
 export const metadata = {
   title: 'News - ADRO BIO FARM',
@@ -24,12 +25,29 @@ function formatDate(dateString: string) {
   });
 }
 
+function findCategoryLabel(categorySlug: string | null, categories: NewsCategory[]) {
+  return categories.find((category) => category.slug === categorySlug)?.label;
+}
+
+function findSubcategoryLabel(categorySlug: string | null, subcategorySlug: string | null, categories: NewsCategory[]) {
+  const category = categories.find((cat) => cat.slug === categorySlug);
+  return category?.subcategories.find((subcategory) => subcategory.slug === subcategorySlug)?.label;
+}
+
 export default async function NewsPage({ searchParams }: NewsPageProps) {
   const params = await searchParams;
   const requestedCategory = extractParam(params?.category) ?? null;
-  const newsPosts = requestedCategory
-    ? (await getNewsPosts()).filter((post) => post.category === requestedCategory)
-    : await getNewsPosts();
+  const requestedSubcategory = extractParam(params?.subcategory) ?? null;
+
+  const [newsCategories, newsPosts] = await Promise.all([
+    getNewsCategories(),
+    getNewsPosts(requestedCategory, requestedSubcategory),
+  ]);
+
+  const selectedCategory = newsCategories.find((category) => category.slug === requestedCategory);
+  const selectedSubcategory = selectedCategory?.subcategories.find((subcategory) => subcategory.slug === requestedSubcategory);
+  const activeLabel = selectedSubcategory?.label ?? selectedCategory?.label ?? 'Journal d’ADRO BIO FARM';
+  const activeDescription = selectedSubcategory?.description ?? selectedCategory?.description ?? 'Des articles structurés pour présenter nos projets, nos offres et nos temps forts dans un format professionnel et lisible.';
   const sortedPosts = [...newsPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
@@ -39,8 +57,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
           <div className="catalogHeader">
             <div>
               <p className="eyebrow">Actualités récentes</p>
-              <h2>Journal d’ADRO BIO FARM</h2>
-              <p className="sectionLead">Des articles structurés pour présenter nos projets, nos offres et nos temps forts dans un format professionnel et lisible.</p>
+              <h2>{activeLabel}</h2>
+              <p className="sectionLead">{activeDescription}</p>
             </div>
             <div className="catalogMeta">
               <span>{newsPosts.length} publications</span>
@@ -64,7 +82,10 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                 <div className="itemHeader">
                   <div>
                     <h3>{post.title}</h3>
-                    <span className="detailBadge">{post.category}</span>
+                    <span className="detailBadge">
+                      {findCategoryLabel(post.category, newsCategories) ?? post.category}
+                      {post.subcategory ? ` • ${findSubcategoryLabel(post.category, post.subcategory, newsCategories) ?? post.subcategory}` : ''}
+                    </span>
                   </div>
                 </div>
                 <p>{post.excerpt}</p>

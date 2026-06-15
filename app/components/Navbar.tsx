@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { poles } from '../../data/poles';
-import { boutiqueCategories, boutiqueProducts } from '../../data/boutique';
 
 type NavItem = {
   href: string;
@@ -12,67 +10,11 @@ type NavItem = {
   children?: NavItem[];
 };
 
-const productPanes: NavItem[] = poles.map((pole) => ({
-  href: `/products?pole=${pole.slug}`,
-  label: `${pole.icon} ${pole.label}`,
-  children: pole.domains.map((domain) => ({
-    href: `/products?pole=${pole.slug}&domain=${domain.slug}`,
-    label: domain.label,
-  })),
-}));
+type NavbarProps = {
+  navItems: NavItem[];
+};
 
-const servicePanes: NavItem[] = poles.map((pole) => ({
-  href: `/services?pole=${pole.slug}`,
-  label: `${pole.icon} ${pole.label}`,
-  children: pole.domains.map((domain) => ({
-    href: `/services?pole=${pole.slug}&domain=${domain.slug}`,
-    label: domain.label,
-  })),
-}));
-
-const boutiquePanes: NavItem[] = boutiqueCategories.map((category) => {
-  const subcategories = Array.from(
-    new Set(
-      boutiqueProducts
-        .filter((product) => product.category === category.slug)
-        .map((product) => product.subcategory),
-    ),
-  );
-
-  return {
-    href: `/boutique?category=${category.slug}`,
-    label: `${category.icon} ${category.label}`,
-    children: subcategories.map((subcategory) => ({
-      href: `/boutique?category=${category.slug}&subcategory=${encodeURIComponent(subcategory)}`,
-      label: subcategory,
-    })),
-  };
-});
-
-const navItems: NavItem[] = [
-  { href: '/', label: 'Accueil' },
-  {
-    href: '/products',
-    label: 'Produits',
-    children: productPanes,
-  },
-  {
-    href: '/services',
-    label: 'Services',
-    children: servicePanes,
-  },
-  {
-    href: '/boutique',
-    label: 'Boutique',
-    children: boutiquePanes,
-  },
-  { href: '/news', label: 'News' },
-  { href: '/references', label: 'Références' },
-  { href: '/certifications', label: 'Certifications' },
-  { href: '/who-we-are', label: 'Qui sommes-nous' },
-];
-
-export default function Navbar() {
+export default function Navbar({ navItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openPole, setOpenPole] = useState<string | null>(null);

@@ -1,8 +1,15 @@
+export type BoutiqueSubcategory = {
+  slug: string;
+  label: string;
+  description?: string;
+};
+
 export type BoutiqueCategory = {
   slug: string;
   label: string;
   description: string;
   icon: string;
+  subcategories: BoutiqueSubcategory[];
 };
 
 export type BoutiqueProduct = {
@@ -25,24 +32,40 @@ export const boutiqueCategories: BoutiqueCategory[] = [
     label: 'Pompes & irrigation',
     description: 'Équipements de pompage, arrosage et circulation d’eau pour ferme durable.',
     icon: '💧',
+    subcategories: [
+      { slug: 'hydroponie', label: 'Hydroponie' },
+      { slug: 'irrigation', label: 'Irrigation' },
+    ],
   },
   {
     slug: 'alimentation',
     label: 'Alimentation animale',
     description: 'Solutions d’alimentation pour volailles, petits animaux et élevage local.',
     icon: '🐓',
+    subcategories: [
+      { slug: 'aviculture', label: 'Aviculture' },
+      { slug: 'alimentation', label: 'Alimentation' },
+    ],
   },
   {
     slug: 'oeufs',
     label: 'Œufs & paniers de ferme',
     description: 'Offres de paniers d’œufs frais et collections de produits fermiers.',
     icon: '🥚',
+    subcategories: [
+      { slug: 'oeufs-frais', label: 'Œufs frais' },
+      { slug: 'accessoires', label: 'Accessoires' },
+    ],
   },
   {
     slug: 'accessoires',
     label: 'Accessoires',
     description: 'Accessoires pratiques pour le nourrissage, l’élevage et les installations agricoles.',
     icon: '🛠️',
+    subcategories: [
+      { slug: 'elevage', label: 'Élevage' },
+      { slug: 'irrigation', label: 'Irrigation' },
+    ],
   },
 ];
 
@@ -51,7 +74,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'pompe-hydroponique-compacte',
     title: 'Pompe hydroponique compacte',
     category: 'pompes',
-    subcategory: 'Hydroponie',
+    subcategory: 'hydroponie',
     excerpt: 'Pompe compacte pour circuler l’eau dans les bassins et systèmes hydroponiques.',
     description: 'Une pompe fiable pour les installations végétales et aquatiques, idéale pour les serres et les petites cultures en circulation continue.',
     detail: [
@@ -68,7 +91,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'pompe-submersible-petit-debit',
     title: 'Pompe submersible petit débit',
     category: 'pompes',
-    subcategory: 'Irrigation',
+    subcategory: 'irrigation',
     excerpt: 'Pompe submersible pour réservoirs, récupérateurs d’eau et circuits de micro-irrigation.',
     description: 'Conçue pour les petits points d’eau de ferme, cette pompe offre un fonctionnement silencieux et fiable.',
     detail: [
@@ -85,7 +108,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'abreuvoir-automatic-poules',
     title: 'Abreuvoir automatique pour poules',
     category: 'alimentation',
-    subcategory: 'Aviculture',
+    subcategory: 'aviculture',
     excerpt: 'Système d’abreuvement propre et sans gaspillage pour volailles.',
     description: 'Idéal pour maintenir des points d’eau frais et accessibles aux poules, avec distribution régulière et facile à remplir.',
     detail: [
@@ -102,7 +125,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'distributeur-de-grains-poulet',
     title: 'Distributeur de grains pour poulets',
     category: 'alimentation',
-    subcategory: 'Alimentation',
+    subcategory: 'alimentation',
     excerpt: 'Distributeur de nourriture qui protège le grain et limite le gaspillage.',
     description: 'Un support de distribution stable conçu pour volailles, avec remplissage facile et dosage régulier.',
     detail: [
@@ -119,7 +142,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'mangeoire-automatic-poulet',
     title: 'Mangeoire automatique pour poulets',
     category: 'alimentation',
-    subcategory: 'Alimentation',
+    subcategory: 'alimentation',
     excerpt: 'Mangeoire moderne avec ouverture modulable, adaptée aux parcours extérieurs.',
     description: 'Permet de gérer l’accès au grain en limitant les déversements et en gardant l’espace propre.',
     detail: [
@@ -135,7 +158,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'panier-oeufs-frais-ferme',
     title: 'Panier d’œufs frais de la ferme',
     category: 'oeufs',
-    subcategory: 'Œufs frais',
+    subcategory: 'oeufs-frais',
     excerpt: 'Panier de 12 œufs fermiers, produit local et de saison.',
     description: 'Œufs issus de volailles élevées en liberté, livrés dans un emballage écologique.',
     detail: [
@@ -152,7 +175,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'seau-de-transport-oeufs',
     title: 'Seau de transport pour œufs',
     category: 'oeufs',
-    subcategory: 'Accessoires',
+    subcategory: 'accessoires',
     excerpt: 'Seau protecteur pour transporter les œufs sans casse.',
     description: 'Une solution simple et pratique pour ramasser et transporter les œufs en toute sécurité.',
     detail: [
@@ -169,7 +192,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'alimenteur-manuel-animaux',
     title: 'Alimenteur manuel pour petits animaux',
     category: 'accessoires',
-    subcategory: 'Élevage',
+    subcategory: 'elevage',
     excerpt: 'Alimenteur durable pour rations de granulés ou céréales.',
     description: 'Un accessoire simple pour distribuer la nourriture sans en assurer le service mechanique.',
     detail: [
@@ -186,7 +209,7 @@ export const boutiqueProducts: BoutiqueProduct[] = [
     slug: 'kit-de-raccord-irrigation',
     title: 'Kit de raccord irrigation',
     category: 'accessoires',
-    subcategory: 'Irrigation',
+    subcategory: 'irrigation',
     excerpt: 'Kit d’adaptation pour tuyaux, buses et pompes en petite ferme.',
     description: 'Permet de connecter rapidement une pompe à un système d’arrosage simple ou à une table hydroponique.',
     detail: [

@@ -3,14 +3,15 @@ import path from 'path';
 import { config } from 'dotenv';
 import { Document, GridFSBucket, MongoClient } from 'mongodb';
 import { boutiqueCategories, boutiqueProducts } from '../data/boutique';
-import { newsPosts } from '../data/news';
+import { newsCategories, newsPosts } from '../data/news';
 import { poles } from '../data/poles';
 import { products } from '../data/products';
 import { services } from '../data/services';
+import { enterpriseInfo } from '../data/enterprise';
 
 config({ path: '.env.local' });
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI!;
 const dbName = process.env.MONGODB_DB || 'adrobiofarm';
 
 if (!uri) {
@@ -183,9 +184,20 @@ async function seedCollection<T extends Document>(db: Awaited<ReturnType<typeof 
   if (docs.length > 0) {
     await collection.insertMany(docs as any[]);
   }
-  if (['products', 'services', 'boutiqueProducts', 'news', 'poles', 'boutiqueCategories', 'images'].includes(collectionName)) {
+
+  if (['products', 'services', 'boutiqueProducts', 'news', 'newsCategories', 'poles', 'boutiqueCategories', 'images'].includes(collectionName)) {
     await collection.createIndex({ slug: 1 }, { unique: true, background: true });
   }
+}
+
+async function seedEnterpriseInfo(db: Awaited<ReturnType<typeof client.db>>, info: typeof enterpriseInfo) {
+  const collection = db.collection('entrepriseInfo');
+  await collection.updateOne(
+    { key: info.key },
+    { $setOnInsert: info },
+    { upsert: true },
+  );
+  await collection.createIndex({ key: 1 }, { unique: true, background: true });
 }
 
 async function run() {
@@ -200,7 +212,10 @@ async function run() {
     await seedCollection(db, 'services', services);
     await seedCollection(db, 'boutiqueCategories', boutiqueCategories);
     await seedCollection(db, 'boutiqueProducts', boutiqueProducts);
+    await seedCollection(db, 'newsCategories', newsCategories);
     await seedCollection(db, 'news', newsPosts);
+
+    await seedEnterpriseInfo(db, enterpriseInfo);
 
     await db.collection('images.files').deleteMany({});
     await db.collection('images.chunks').deleteMany({});
@@ -210,7 +225,7 @@ async function run() {
     const mergedImages = mergeImageDocs(publicImages, itemImages);
     await seedCollection(db, 'images', mergedImages);
 
-    console.log('Seed complete. Collections created: poles, products, services, boutiqueCategories, boutiqueProducts, news, images, images.files, images.chunks.');
+    console.log('Seed complete. Collections created: poles, products, services, boutiqueCategories, boutiqueProducts, news, images, images.files, images.chunks, entrepriseInfo.');
   } catch (error) {
     console.error('Seed failed:', error);
     process.exit(1);

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { poles } from '../data/poles';
+import { getPoles } from '../lib/db';
 
 const trustPoints = [
   {
@@ -24,7 +24,9 @@ const trustPoints = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const poles = await getPoles();
+
   return (
     <main>
       <section className="hero heroLanding">

@@ -1,6 +1,6 @@
-import { GridFSBucket, MongoClient } from 'mongodb';
+import type { Db, MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI!;
 const dbName = process.env.MONGODB_DB || 'adrobiofarm';
 
 if (!uri) {
@@ -11,14 +11,24 @@ const globalWithMongo = globalThis as typeof globalThis & {
   _mongoClientPromise?: Promise<MongoClient>;
 };
 
-const clientPromise = globalWithMongo._mongoClientPromise ?? (globalWithMongo._mongoClientPromise = new MongoClient(uri).connect());
+let clientPromise: Promise<MongoClient> | undefined = globalWithMongo._mongoClientPromise;
 
-export async function getDb() {
-  const client = await clientPromise;
-  return client.db(dbName);
+async function getClientPromise(): Promise<MongoClient> {
+  if (!clientPromise) {
+    const { MongoClient } = await import('mongodb');
+    clientPromise = new MongoClient(uri).connect();
+    globalWithMongo._mongoClientPromise = clientPromise;
+  }
+  return clientPromise;
+}
+
+export async function getDb(dbNameOverride?: string): Promise<Db> {
+  const client = await getClientPromise();
+  return client.db(dbNameOverride ?? dbName);
 }
 
 export async function getGridFSBucket() {
+  const { GridFSBucket } = await import('mongodb');
   const db = await getDb();
   return new GridFSBucket(db, { bucketName: 'images' });
 }

@@ -26,10 +26,11 @@ export default async function BoutiquePage({ searchParams }: { searchParams: Pro
   ]);
 
   const selectedCategory = boutiqueCategories.find((category) => category.slug === requestedCategory);
+  const selectedSubcategory = selectedCategory?.subcategories.find((subcategory) => subcategory.slug === requestedSubcategory);
   const pageCount = Math.max(1, Math.ceil(boutiqueProducts.length / PAGE_SIZE));
   const paginatedProducts = boutiqueProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const subtitle = selectedCategory ? selectedCategory.description : 'Découvrez tous nos accessoires, équipements et produits fermiers disponibles en boutique.';
-  const activeLabel = selectedCategory ? selectedCategory.label : 'Toutes les catégories';
+  const activeLabel = selectedSubcategory?.label ?? selectedCategory?.label ?? 'Toutes les catégories';
+  const subtitle = selectedSubcategory?.description ?? selectedCategory?.description ?? 'Découvrez tous nos accessoires, équipements et produits fermiers disponibles en boutique.';
 
   return (
     <main>

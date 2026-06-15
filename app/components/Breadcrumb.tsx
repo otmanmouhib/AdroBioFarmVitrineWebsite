@@ -3,24 +3,38 @@
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { poles } from '../../data/poles';
-import { products } from '../../data/products';
-import { services } from '../../data/services';
-import { boutiqueCategories } from '../../data/boutique';
-import { newsPosts } from '../../data/news';
+import type { Pole } from '../../data/poles';
+import type { Product } from '../../data/products';
+import type { Service } from '../../data/services';
+import type { BoutiqueCategory } from '../../data/boutique';
+import type { NewsPost } from '../../data/news';
 
-function findPoleLabel(slug: string | null) {
+type BreadcrumbProps = {
+  poles: Pole[];
+  products: Product[];
+  services: Service[];
+  boutiqueCategories: BoutiqueCategory[];
+  newsPosts: NewsPost[];
+};
+
+function findPoleLabel(slug: string | null, poles: Pole[]) {
   return poles.find((pole) => pole.slug === slug)?.label;
 }
 
-function findDomainLabel(slug: string | null) {
+function findDomainLabel(slug: string | null, poles: Pole[]) {
   return slug
     ? poles.flatMap((pole) => pole.domains).find((domain) => domain.slug === slug)?.label
     : undefined;
 }
 
-function findCategoryLabel(slug: string | null) {
+function findCategoryLabel(slug: string | null, boutiqueCategories: BoutiqueCategory[]) {
   return boutiqueCategories.find((category) => category.slug === slug)?.label;
+}
+
+function findBoutiqueSubcategoryLabel(categorySlug: string | null, subcategorySlug: string | null, boutiqueCategories: BoutiqueCategory[]) {
+  if (!categorySlug || !subcategorySlug) return undefined;
+  const category = boutiqueCategories.find((categoryItem) => categoryItem.slug === categorySlug);
+  return category?.subcategories.find((subcategory) => subcategory.slug === subcategorySlug)?.label;
 }
 
 function buildListHref(base: string, pole?: string | null, domain?: string | null) {
@@ -30,7 +44,7 @@ function buildListHref(base: string, pole?: string | null, domain?: string | nul
   return `${base}${params.toString() ? `?${params.toString()}` : ''}`;
 }
 
-export default function Breadcrumb() {
+export default function Breadcrumb({ poles, products, services, boutiqueCategories, newsPosts }: BreadcrumbProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -59,11 +73,11 @@ export default function Breadcrumb() {
           if (!domain) domain = product.domain;
         }
       }
-      const poleLabel = findPoleLabel(pole);
+      const poleLabel = findPoleLabel(pole, poles);
       if (poleLabel) {
         items.push({ href: buildListHref('/products', pole), label: poleLabel });
       }
-      const domainLabel = findDomainLabel(domain);
+      const domainLabel = findDomainLabel(domain, poles);
       if (domainLabel) {
         items.push({ href: buildListHref('/products', pole, domain), label: domainLabel });
       }
@@ -89,11 +103,11 @@ export default function Breadcrumb() {
           if (!domain) domain = service.domain;
         }
       }
-      const poleLabel = findPoleLabel(pole);
+      const poleLabel = findPoleLabel(pole, poles);
       if (poleLabel) {
         items.push({ href: buildListHref('/services', pole), label: poleLabel });
       }
-      const domainLabel = findDomainLabel(domain);
+      const domainLabel = findDomainLabel(domain, poles);
       if (domainLabel) {
         items.push({ href: buildListHref('/services', pole, domain), label: domainLabel });
       }
@@ -109,17 +123,19 @@ export default function Breadcrumb() {
     if (first === 'boutique') {
       items.push({ href: '/boutique', label: 'Boutique' });
       const category = searchParams.get('category');
-      const categoryLabel = findCategoryLabel(category);
+      const subcategory = searchParams.get('subcategory');
+      const categoryLabel = findCategoryLabel(category, boutiqueCategories);
       if (categoryLabel) {
         items.push({ href: `/boutique?category=${category}`, label: categoryLabel });
       }
+      const subcategoryLabel = findBoutiqueSubcategoryLabel(category, subcategory, boutiqueCategories);
+      if (subcategoryLabel) {
+        items.push({ href: `/boutique?category=${category}&subcategory=${subcategory}`, label: subcategoryLabel });
+      }
       if (second) {
-        const product = boutiqueCategories.find((item) => item.slug === second);
-        if (!product) {
-          const productItem = products.find((item) => item.slug === second) || services.find((item) => item.slug === second);
-          if (productItem) {
-            items.push({ href: `/boutique/${productItem.slug}`, label: productItem.title, active: true });
-          }
+        const productItem = products.find((item) => item.slug === second) || services.find((item) => item.slug === second);
+        if (productItem) {
+          items.push({ href: `/boutique/${productItem.slug}`, label: productItem.title, active: true });
         }
       }
       return items;
@@ -157,7 +173,7 @@ export default function Breadcrumb() {
     }
 
     return items;
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, boutiqueCategories, newsPosts, poles, products, services]);
 
   if (crumbs.length <= 1) {
     return null;

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
-import Navbar from './components/Navbar';
-import Breadcrumb from './components/Breadcrumb';
+import NavbarServer from './components/NavbarServer';
+import BreadcrumbServer from './components/BreadcrumbServer';
 import Footer from './components/Footer';
 
 export const metadata: Metadata = {
@@ -15,8 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" suppressHydrationWarning>
       <body>
         <Suspense fallback={null}>
-          <Navbar />
-          <Breadcrumb />
+          <NavbarServer />
+          <BreadcrumbServer />
         </Suspense>
         <Suspense fallback={null}>{children}</Suspense>
         <Footer />
