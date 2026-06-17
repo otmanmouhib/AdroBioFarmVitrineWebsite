@@ -14,6 +14,12 @@ function formatPrice(price?: number) {
   return `${price.toLocaleString('fr-FR')} DH`;
 }
 
+function formatAvailability(availability: 'in-stock' | 'out-of-stock' | 'on-demand') {
+  if (availability === 'in-stock') return 'En stock';
+  if (availability === 'out-of-stock') return 'Rupture de stock';
+  return 'Sur demande';
+}
+
 export default async function BoutiquePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
   const requestedCategory = extractParam(params?.category) ?? null;
@@ -31,6 +37,11 @@ export default async function BoutiquePage({ searchParams }: { searchParams: Pro
   const paginatedProducts = boutiqueProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const activeLabel = selectedSubcategory?.label ?? selectedCategory?.label ?? 'Toutes les catégories';
   const subtitle = selectedSubcategory?.description ?? selectedCategory?.description ?? 'Découvrez tous nos accessoires, équipements et produits fermiers disponibles en boutique.';
+
+  const findSubcategoryLabel = (categoryId: string, subcategoryId: string) => {
+    const category = boutiqueCategories.find((item) => item.slug === categoryId);
+    return category?.subcategories.find((sub) => sub.slug === subcategoryId)?.label ?? subcategoryId;
+  };
 
   return (
     <main>
@@ -64,13 +75,17 @@ export default async function BoutiquePage({ searchParams }: { searchParams: Pro
                 <div className="itemHeader">
                   <div>
                     <h3>{product.title}</h3>
-                    <span className="detailBadge">{product.subcategory}</span>
+                    <span className="detailBadge">
+                      {findSubcategoryLabel(product.boutiqueCategoryId, product.boutiqueSubcategoryId)}
+                    </span>
                   </div>
-                  <span className={`stockLabel ${product.stock === 'in-stock' ? 'inStock' : product.stock === 'rupture' ? 'outOfStock' : 'onDemand'}`}>
-                    {product.stock === 'in-stock' ? 'En stock' : product.stock === 'rupture' ? 'Rupture de stock' : 'Sur demande'}
+                  <span
+                    className={`stockLabel ${product.availability === 'in-stock' ? 'inStock' : product.availability === 'out-of-stock' ? 'outOfStock' : 'onDemand'}`}
+                  >
+                    {formatAvailability(product.availability)}
                   </span>
                 </div>
-                <p>{product.excerpt}</p>
+                <p>{product.shortDescription}</p>
                 <div className="itemFooter boutiqueFooter">
                   <span className="priceTag">{formatPrice(product.price)}</span>
                   <div className="boutiqueActions">

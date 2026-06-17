@@ -53,20 +53,20 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
 
 export async function getBoutiqueCategories(): Promise<BoutiqueCategory[]> {
   const db = await getDb();
-  return db.collection<BoutiqueCategory>('boutiqueCategories').find({}, { projection: { _id: 0 } }).toArray();
+  return db.collection<BoutiqueCategory>('boutiqueCategories').find({}).toArray();
 }
 
 export async function getBoutiqueProducts(category?: string | null, subcategory?: string | null): Promise<BoutiqueProduct[]> {
   const db = await getDb();
   const filter: Record<string, unknown> = {};
-  if (category) filter.category = category;
-  if (subcategory) filter.subcategory = subcategory;
-  return db.collection<BoutiqueProduct>('boutiqueProducts').find(filter, { projection: { _id: 0 } }).toArray();
+  if (category) filter.boutiqueCategoryId = category;
+  if (subcategory) filter.boutiqueSubcategoryId = subcategory;
+  return db.collection<BoutiqueProduct>('boutique').find(filter).toArray();
 }
 
 export async function getBoutiqueProductBySlug(slug: string): Promise<BoutiqueProduct | null> {
   const db = await getDb();
-  return db.collection<BoutiqueProduct>('boutiqueProducts').findOne({ slug }, { projection: { _id: 0 } });
+  return db.collection<BoutiqueProduct>('boutique').findOne({ slug });
 }
 
 export async function getNewsPosts(category?: string | null, subcategory?: string | null): Promise<NewsPost[]> {

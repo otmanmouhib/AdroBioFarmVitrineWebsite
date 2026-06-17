@@ -76,15 +76,15 @@ function buildImageDocs(): ImageDoc[] {
   boutiqueProducts.forEach((product) => {
     if (product.image) {
       images.push({
-        slug: `boutiqueProducts-${product.slug}`,
-        sourceCollection: 'boutiqueProducts',
+        slug: `boutique-${product.slug}`,
+        sourceCollection: 'boutique',
         sourceSlug: product.slug,
         title: product.title,
         src: product.image,
         alt: `Image for ${product.title}`,
         kind: 'boutique',
-        category: product.category,
-        subcategory: product.subcategory,
+        category: product.boutiqueCategoryId,
+        subcategory: product.boutiqueSubcategoryId,
       });
     }
   });
@@ -185,8 +185,12 @@ async function seedCollection<T extends Document>(db: Awaited<ReturnType<typeof 
     await collection.insertMany(docs as any[]);
   }
 
-  if (['products', 'services', 'boutiqueProducts', 'news', 'newsCategories', 'poles', 'boutiqueCategories', 'images'].includes(collectionName)) {
+  if (['products', 'services', 'boutique', 'news', 'newsCategories', 'poles', 'boutiqueCategories', 'images'].includes(collectionName)) {
     await collection.createIndex({ slug: 1 }, { unique: true, background: true });
+  }
+
+  if (collectionName === 'boutique') {
+    await collection.createIndex({ boutiqueCategoryId: 1, boutiqueSubcategoryId: 1 }, { background: true });
   }
 }
 
@@ -211,7 +215,7 @@ async function run() {
     await seedCollection(db, 'products', products);
     await seedCollection(db, 'services', services);
     await seedCollection(db, 'boutiqueCategories', boutiqueCategories);
-    await seedCollection(db, 'boutiqueProducts', boutiqueProducts);
+    await seedCollection(db, 'boutique', boutiqueProducts);
     await seedCollection(db, 'newsCategories', newsCategories);
     await seedCollection(db, 'news', newsPosts);
 
@@ -225,7 +229,7 @@ async function run() {
     const mergedImages = mergeImageDocs(publicImages, itemImages);
     await seedCollection(db, 'images', mergedImages);
 
-    console.log('Seed complete. Collections created: poles, products, services, boutiqueCategories, boutiqueProducts, news, images, images.files, images.chunks, entrepriseInfo.');
+    console.log('Seed complete. Collections created: poles, products, services, boutiqueCategories, boutique, news, images, images.files, images.chunks, entrepriseInfo.');
   } catch (error) {
     console.error('Seed failed:', error);
     process.exit(1);
