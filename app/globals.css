@@ -41,6 +41,12 @@ main {
   margin: 0 auto;
 }
 
+@media (min-width: 1280px) {
+  .container {
+    width: min(1360px, calc(100% - 3rem));
+  }
+}
+
 .siteHeader {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(18px);
@@ -276,14 +282,11 @@ main {
   color: var(--green-700);
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(80, 122, 47, 0.08);
-  transition: color 0.18s ease, border-color 0.18s ease;
-}
-
-.navLink:hover,
-.navLink:focus-visible {
+    font-size: 0.88rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(80, 122, 47, 0.08);
+    transition: color 0.18s ease, border-color 0.18s ease;
+    white-space: nowrap;
   color: var(--green-900);
   border-color: rgba(80, 122, 47, 0.16);
 }
@@ -299,17 +302,16 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1rem;
   border-radius: 999px;
   background: var(--green-900);
   color: white;
   text-decoration: none;
   font-weight: 700;
+  font-size: 0.88rem;
+  white-space: nowrap;
 }
 
-.navAction:hover,
-.navButton:hover,
-.navAction:focus-visible,
 .navButton:focus-visible {
   background: #2f5619;
 }
@@ -350,7 +352,7 @@ main {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 0;
     margin: 0;
     width: auto;
@@ -369,19 +371,21 @@ main {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.45rem;
+    justify-content: space-between;
+    gap: 0.3rem;
     min-width: 0;
   }
 
   .navGroup {
     position: relative;
     display: inline-block;
+    min-width: 0;
   }
 
   .navGroupHeader {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.25rem;
   }
 
   .navGroupList {
