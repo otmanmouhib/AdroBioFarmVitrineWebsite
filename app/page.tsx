@@ -55,18 +55,18 @@ export default async function HomePage() {
               <p className="eyebrow">Offre structurée</p>
               <h2>Une proposition claire et engagée.</h2>
               <p className="heroPanelText">
-                Trois types d’offres — produits, services et formations — présentés simplement, pour que vous trouviez rapidement ce qui correspond à votre projet durable.
+                Produits fermiers, séjours et ateliers conçus pour les projets concrets du territoire.
               </p>
             </div>
 
             <div className="heroPanelStats">
               <div>
-                <strong>3 cibles</strong>
-                <span>Produits, services, formations</span>
+                <strong>3 axes</strong>
+                <span>Produit, accueil, transmission</span>
               </div>
               <div>
-                <strong>7 domaines</strong>
-                <span>De la ferme à l’écologie</span>
+                <strong>Action locale</strong>
+                <span>Simple, direct, utile</span>
               </div>
             </div>
 
@@ -99,7 +99,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section highlight">
+      <section className="section highlight poleSection">
         <div className="container">
           <div className="sectionIntro">
             <h2>Nos pôles d’activité</h2>
@@ -116,9 +116,14 @@ export default async function HomePage() {
                 <div className="domainCardBody">
                   <h3>{pole.label}</h3>
                   <p>{pole.shortDescription}</p>
-                  <Link href={`/products?pole=${pole.slug}`} className="button secondary">
-                    Explorer ce pôle
-                  </Link>
+                  <div className="domainCardActions">
+                    <Link href={`/products?pole=${pole.slug}`} className="button secondary">
+                      Explorer les produits
+                    </Link>
+                    <Link href={`/services?pole=${pole.slug}`} className="button secondary">
+                      Explorer les services
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}
