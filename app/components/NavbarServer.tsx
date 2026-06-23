@@ -14,7 +14,7 @@ export default async function NavbarServer() {
 
   const productPanes: NavItem[] = poles.map((pole) => ({
     href: `/products?pole=${pole.slug}`,
-    label: `${pole.icon} ${pole.label}`,
+    label: pole.label,
     children: pole.domains.map((domain) => ({
       href: `/products?pole=${pole.slug}&domain=${domain.slug}`,
       label: domain.label,
@@ -23,7 +23,7 @@ export default async function NavbarServer() {
 
   const servicePanes: NavItem[] = poles.map((pole) => ({
     href: `/services?pole=${pole.slug}`,
-    label: `${pole.icon} ${pole.label}`,
+    label: pole.label,
     children: pole.domains.map((domain) => ({
       href: `/services?pole=${pole.slug}&domain=${domain.slug}`,
       label: domain.label,

@@ -17,7 +17,7 @@ function findDomainLabel(poles: Pole[], slug: string | null | undefined) {
 }
 
 function getPoleIcon(poles: Pole[], slug: string) {
-  return poles.find((pole) => pole.slug === slug)?.icon ?? '🍃';
+  return poles.find((pole) => pole.slug === slug)?.label.charAt(0) ?? 'P';
 }
 
 function getCardImage(title: string) {

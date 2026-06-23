@@ -41,7 +41,6 @@ export default function PoleDomainNavigation({ poles, items, page, activePole, a
             href={`/${page}?pole=${pole.slug}`}
             className={`poleTabButton ${activePole === pole.slug ? 'active' : ''}`}
           >
-            <span>{pole.icon}</span>
             {pole.label}
           </Link>
         ))}
@@ -58,7 +57,6 @@ export default function PoleDomainNavigation({ poles, items, page, activePole, a
             <div key={pole.slug} className="catalogPanel">
               <div className="catalogPanelHeader">
                 <div className="polePanelTitle">
-                  <span className="polePanelIcon">{pole.icon}</span>
                   <div>
                     <h3>{pole.label}</h3>
                     <p>{pole.shortDescription}</p>

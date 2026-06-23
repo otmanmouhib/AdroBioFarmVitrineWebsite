@@ -110,8 +110,7 @@ export default async function HomePage() {
           <div className="domainGrid">
             {poles.map((pole) => (
               <article key={pole.slug} className="domainCard">
-                <div className="domainCardHeader" style={{ backgroundColor: `${pole.color}22` }}>
-                  <span className="domainIcon">{pole.icon}</span>
+                <div className="domainCardHeader">
                 </div>
                 <div className="domainCardBody">
                   <h3>{pole.label}</h3>
