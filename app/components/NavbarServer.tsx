@@ -1,7 +1,8 @@
-import { getPoles } from '../../lib/db';
-import { boutiqueCategories } from '../../data/boutique';
-import { newsCategories } from '../../data/news';
+import { getPoles, getBoutiqueCategories, getNewsCategories } from '../../lib/db';
+import { getProductDomains, getServiceDomains } from '../../data/poles';
 import Navbar from './Navbar';
+
+export const dynamic = 'force-dynamic';
 
 type NavItem = {
   href: string;
@@ -10,12 +11,16 @@ type NavItem = {
 };
 
 export default async function NavbarServer() {
-  const poles = await getPoles();
+  const [poles, boutiqueCategories, newsCategories] = await Promise.all([
+    getPoles(),
+    getBoutiqueCategories(),
+    getNewsCategories(),
+  ]);
 
   const productPanes: NavItem[] = poles.map((pole) => ({
     href: `/products?pole=${pole.slug}`,
     label: pole.label,
-    children: pole.domains.map((domain) => ({
+    children: getProductDomains(pole).map((domain) => ({
       href: `/products?pole=${pole.slug}&domain=${domain.slug}`,
       label: domain.label,
     })),
@@ -24,7 +29,7 @@ export default async function NavbarServer() {
   const servicePanes: NavItem[] = poles.map((pole) => ({
     href: `/services?pole=${pole.slug}`,
     label: pole.label,
-    children: pole.domains.map((domain) => ({
+    children: getServiceDomains(pole).map((domain) => ({
       href: `/services?pole=${pole.slug}&domain=${domain.slug}`,
       label: domain.label,
     })),
@@ -32,7 +37,7 @@ export default async function NavbarServer() {
 
   const boutiquePanes: NavItem[] = boutiqueCategories.map((category) => ({
     href: `/boutique?category=${category.slug}`,
-    label: `${category.icon} ${category.label}`,
+    label: category.icon ? `${category.icon} ${category.label}` : category.label,
     children: category.subcategories.map((subcategory) => ({
       href: `/boutique?category=${category.slug}&subcategory=${subcategory.slug}`,
       label: subcategory.label,

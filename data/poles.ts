@@ -11,8 +11,30 @@ export type Pole = {
   shortDescription: string;
   createdAt: string;
   updatedAt: string;
-  domains: Domain[];
+  domains?: Domain[];
+  productDomains?: Domain[];
+  serviceDomains?: Domain[];
 };
+
+export function getProductDomains(pole: Pole): Domain[] {
+  return pole.productDomains ?? pole.domains ?? [];
+}
+
+export function getServiceDomains(pole: Pole): Domain[] {
+  return pole.serviceDomains ?? pole.domains ?? [];
+}
+
+export function getAllDomains(pole: Pole): Domain[] {
+  const seen = new Set<string>();
+  const domains: Domain[] = [];
+  [...getProductDomains(pole), ...getServiceDomains(pole)].forEach((domain) => {
+    if (!seen.has(domain.slug)) {
+      seen.add(domain.slug);
+      domains.push(domain);
+    }
+  });
+  return domains;
+}
 
 export const poles: Pole[] = [
   {

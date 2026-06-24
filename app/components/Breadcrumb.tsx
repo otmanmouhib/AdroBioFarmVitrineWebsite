@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { getAllDomains } from '../../data/poles';
 import type { Pole } from '../../data/poles';
 import type { Product } from '../../data/products';
 import type { Service } from '../../data/services';
@@ -23,7 +24,7 @@ function findPoleLabel(slug: string | null, poles: Pole[]) {
 
 function findDomainLabel(slug: string | null, poles: Pole[]) {
   return slug
-    ? poles.flatMap((pole) => pole.domains).find((domain) => domain.slug === slug)?.label
+    ? poles.flatMap((pole) => getAllDomains(pole)).find((domain) => domain.slug === slug)?.label
     : undefined;
 }
 

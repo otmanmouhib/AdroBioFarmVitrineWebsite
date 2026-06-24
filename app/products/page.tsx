@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import TagList from '../components/TagList';
 import { normalizeDbImageSrc } from '../../lib/image';
+import { getAllDomains, type Pole } from '../../data/poles';
 import { getPoles, getProducts } from '../../lib/db';
-import type { Pole } from '../../data/poles';
 import { productTags } from '../../data/productTags';
 
 function extractParam(value?: string | string[]) {
@@ -12,7 +12,7 @@ function extractParam(value?: string | string[]) {
 
 function findDomainLabel(poles: Pole[], slug: string | null | undefined) {
   return slug
-    ? poles.flatMap((pole) => pole.domains).find((domain) => domain.slug === slug)?.label
+    ? poles.flatMap((pole) => getAllDomains(pole)).find((domain) => domain.slug === slug)?.label
     : undefined;
 }
 

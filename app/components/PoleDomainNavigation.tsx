@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Pole } from '../../data/poles';
+import { getProductDomains, getServiceDomains, Pole } from '../../data/poles';
 
 type NavItem = {
   pole: string;
@@ -23,6 +23,10 @@ function buildDomainsByPole(items: NavItem[]) {
     acc[item.pole] = domains;
     return acc;
   }, {});
+}
+
+function getDomainsForPage(pole: Pole, page: 'products' | 'services') {
+  return page === 'products' ? getProductDomains(pole) : getServiceDomains(pole);
 }
 
 export default function PoleDomainNavigation({ poles, items, page, activePole, activeDomain }: PoleDomainNavigationProps) {
@@ -48,7 +52,7 @@ export default function PoleDomainNavigation({ poles, items, page, activePole, a
 
       <div className="polePanels">
         {poles.map((pole) => {
-          const domains = pole.domains.filter((domain) => availableDomainsByPole[pole.slug]?.has(domain.slug));
+          const domains = getDomainsForPage(pole, page).filter((domain) => availableDomainsByPole[pole.slug]?.has(domain.slug));
           if (domains.length === 0) {
             return null;
           }

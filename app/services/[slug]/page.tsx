@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { normalizeDbImageSrc } from '../../../lib/image';
 import { getPoles, getProducts, getServiceBySlug, getServices } from '../../../lib/db';
+import { getServiceDomains } from '../../../data/poles';
 
 type PageParams = { params: Promise<{ slug: string }> };
 
@@ -40,7 +41,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
   ]);
 
   const pole = poles.find((item) => item.slug === service.pole);
-  const domain = pole?.domains.find((domainItem) => domainItem.slug === service.domain);
+  const domain = pole ? getServiceDomains(pole).find((domainItem) => domainItem.slug === service.domain) : undefined;
 
   return (
     <main>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -18,8 +18,24 @@ export default function Navbar({ navItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [openPole, setOpenPole] = useState<string | null>(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (!navRef.current) return;
+      if (event.target instanceof Node && !navRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+        setOpenPole(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -69,7 +85,7 @@ export default function Navbar({ navItems }: NavbarProps) {
         </div>
 
         <nav className={`navLinks ${menuOpen ? 'active' : ''}`}>
-          <div className="navItems">
+          <div className="navItems" ref={navRef}>
             {navItems.map((item) => (
               <div key={item.href} className="navGroup">
                 <div className="navGroupHeader">
