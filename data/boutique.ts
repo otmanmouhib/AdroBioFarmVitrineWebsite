@@ -23,6 +23,7 @@ export type BoutiqueProduct = {
   shortDescription: string;
   description: string;
   details: string[];
+  detail?: string | string[];
   specs: string[];
   price: number;
   currency: string;
@@ -34,6 +35,11 @@ export type BoutiqueProduct = {
   status: 'active' | 'inactive';
   tags: string[];
   image: string;
+  imageId?: string;
+  stock?: string;
+  category?: string;
+  subcategory?: string;
+  excerpt?: string;
   gallery?: string[];
   boutiqueCategoryId: string;
   boutiqueSubcategoryId: string;

@@ -80,7 +80,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
                 </div>
                 <p>{service.description}</p>
                 <div className="itemFooter">
-                  <TagList tags={serviceTags[service.slug]} max={2} />
+                  <TagList tags={service.tags?.length ? service.tags : serviceTags[service.slug]} max={2} />
                   <Link href={`/services/${service.slug}`} className="button secondary">
                     En savoir plus
                   </Link>

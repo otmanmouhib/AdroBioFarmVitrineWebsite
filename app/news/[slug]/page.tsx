@@ -50,11 +50,6 @@ export default async function NewsPostPage({ params }: PageParams) {
             <span className="detailBadge">{post.category}</span>
             <h1>{post.title}</h1>
             <p className="intro">{post.summary}</p>
-            <div className="heroActions heroActionsCompact">
-              <Link href={`/news?category=${encodeURIComponent(post.category)}`} className="button secondary small">
-                Voir plus d’articles {post.category}
-              </Link>
-            </div>
             <div className="heroBadges">
               <span className="heroBadge">Publié le {new Date(post.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
             </div>

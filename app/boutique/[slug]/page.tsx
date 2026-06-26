@@ -53,6 +53,11 @@ export default async function BoutiqueProductPage({ params }: PageParams) {
 
   const category = boutiqueCategories.find((categoryItem) => categoryItem.slug === product.boutiqueCategoryId);
   const subcategory = category?.subcategories.find((sub) => sub.slug === product.boutiqueSubcategoryId);
+  const details = Array.isArray(product.details) ? product.details : [];
+  const legacyDetail = (product as typeof product & { detail?: string }).detail;
+  const detailItems = details.length > 0
+    ? details
+    : (legacyDetail ? [legacyDetail] : []);
 
   return (
     <main>
@@ -63,14 +68,6 @@ export default async function BoutiqueProductPage({ params }: PageParams) {
             <span className="detailBadge">{subcategory?.label ?? product.boutiqueSubcategoryId}</span>
             <h1>{product.title}</h1>
             <p className="intro">{product.shortDescription}</p>
-            <div className="heroActions heroActionsCompact">
-              <Link
-                href={`/boutique?category=${encodeURIComponent(product.boutiqueCategoryId)}&subcategory=${encodeURIComponent(product.boutiqueSubcategoryId)}`}
-                className="button secondary small"
-              >
-                Voir plus de {subcategory?.label ?? product.boutiqueSubcategoryId}
-              </Link>
-            </div>
             <div className="heroBadges">
               <span
                 className={`stockLabel ${product.availability === 'in-stock' ? 'inStock' : product.availability === 'out-of-stock' ? 'outOfStock' : 'onDemand'}`}
@@ -115,11 +112,13 @@ export default async function BoutiqueProductPage({ params }: PageParams) {
           </div>
 
           <article className="catalogItem">
-            <ul className="productDetailList">
-              {product.details.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+            {detailItems.length > 0 && (
+              <ul className="productDetailList">
+                {detailItems.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            )}
             <p>{product.description}</p>
           </article>
         </div>

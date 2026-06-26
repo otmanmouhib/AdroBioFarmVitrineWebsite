@@ -4,6 +4,9 @@ export type EnterpriseInfo = {
   email: string;
   phone: string;
   address: string;
+  phones?: string[];
+  fax?: string;
+  addressLines?: string[];
 };
 
 export const enterpriseInfo: EnterpriseInfo = {

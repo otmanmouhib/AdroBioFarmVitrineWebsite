@@ -80,7 +80,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 </div>
                 <p>{product.shortDescription}</p>
                 <div className="itemFooter">
-                  <TagList tags={productTags[product.slug]} max={2} />
+                  <TagList tags={product.tags?.length ? product.tags : productTags[product.slug]} max={2} />
                   <Link href={`/products/${product.slug}`} className="button secondary">
                     En savoir plus
                   </Link>

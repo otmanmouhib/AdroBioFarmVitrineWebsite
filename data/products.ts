@@ -8,6 +8,10 @@ export type Product = {
   description: string;
   features: string[];
   image?: string;
+  imageId?: string;
+  tags?: string[];
+  price?: number;
+  stock?: string;
 };
 
 export const products: Product[] = [

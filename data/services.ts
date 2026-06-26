@@ -10,6 +10,8 @@ export type Service = {
   duration?: string;
   audience?: string;
   image?: string;
+  imageId?: string;
+  tags?: string[];
 };
 
 export const services: Service[] = [

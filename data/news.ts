@@ -21,6 +21,12 @@ export type NewsPost = {
   summary: string;
   image: string;
   content: string[];
+  imageId?: string;
+  categoryId?: string;
+  publishedAt?: string;
+  author?: string;
+  tags?: string[];
+  status?: string;
 };
 
 export const newsCategories: NewsCategory[] = [

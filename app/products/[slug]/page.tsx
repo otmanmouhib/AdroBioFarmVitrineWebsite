@@ -60,13 +60,15 @@ export default async function ProductDetailPage({ params }: PageParams) {
                 Voir plus de {domain?.label ?? product.category}
               </Link>
             </div>
-            <div className="chips">
-              {product.features.map((feature) => (
-                <span key={feature} className="tagChip">
-                  {feature}
-                </span>
-              ))}
-            </div>
+            {product.features.length > 0 && (
+              <div className="chips">
+                {product.features.map((feature) => (
+                  <span key={feature} className="tagChip">
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="actions">
               <Link href="/contact" className="button">Contacter pour commande</Link>
               <Link href="/products" className="button secondary">Retour aux produits</Link>
@@ -100,12 +102,16 @@ export default async function ProductDetailPage({ params }: PageParams) {
             <p className="sectionLead">{pole?.shortDescription}</p>
             <h2>Description détaillée</h2>
             <p>{product.description}</p>
-            <h3>Ce que contient ce produit</h3>
-            <ul className="detailList">
-              {product.features.map((feature) => (
-                <li key={feature}>{feature}</li>
-              ))}
-            </ul>
+            {product.features.length > 0 && (
+              <>
+                <h3>Ce que contient ce produit</h3>
+                <ul className="detailList">
+                  {product.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           <div className="itemCard detailSidebar">

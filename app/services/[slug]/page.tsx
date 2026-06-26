@@ -57,13 +57,15 @@ export default async function ServiceDetailPage({ params }: PageParams) {
                 Voir plus de {domain?.label ?? service.category}
               </Link>
             </div>
-            <div className="chips">
-              {service.methodology.slice(0, 3).map((item) => (
-                <span key={item} className="tagChip">
-                  {item}
-                </span>
-              ))}
-            </div>
+            {service.methodology.length > 0 && (
+              <div className="chips">
+                {service.methodology.slice(0, 3).map((item) => (
+                  <span key={item} className="tagChip">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="actions">
               <Link href="/contact" className="button">Contactez-nous</Link>
               <Link href="/services" className="button secondary">Retour aux services</Link>
@@ -95,18 +97,26 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           <div>
             <span className="detailBadge">{pole?.label ?? 'Catalogue'}</span>
             <p className="sectionLead">{pole?.shortDescription}</p>
-            <h2>Comment ça marche</h2>
-            <ul className="detailList">
-              {service.methodology.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <h3>Ce que vous recevez</h3>
-            <ul className="detailList">
-              {service.deliverables.map((deliverable) => (
-                <li key={deliverable}>{deliverable}</li>
-              ))}
-            </ul>
+            {service.methodology.length > 0 && (
+              <>
+                <h2>Comment ça marche</h2>
+                <ul className="detailList">
+                  {service.methodology.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {service.deliverables.length > 0 && (
+              <>
+                <h3>Ce que vous recevez</h3>
+                <ul className="detailList">
+                  {service.deliverables.map((deliverable) => (
+                    <li key={deliverable}>{deliverable}</li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           <div className="itemCard detailSidebar">
