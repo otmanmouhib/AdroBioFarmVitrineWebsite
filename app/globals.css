@@ -1346,6 +1346,18 @@ main {
   padding: 2rem;
 }
 
+.heroPanelLandingImage {
+  padding: 0;
+  overflow: hidden;
+}
+
+.heroPanelLandingMedia {
+  aspect-ratio: 5 / 4;
+  min-height: clamp(240px, 45vw, 380px);
+  max-height: 520px;
+  border-radius: inherit;
+}
+
 .heroPanelLanding h2 {
   margin-top: 0.6rem;
   font-size: clamp(1.75rem, 2.2vw, 2.3rem);
@@ -1467,6 +1479,11 @@ main {
     grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
     align-items: center;
     gap: 3rem;
+  }
+
+  .heroPanelLandingMedia {
+    aspect-ratio: 4 / 3;
+    min-height: clamp(340px, 34vw, 520px);
   }
 }
 

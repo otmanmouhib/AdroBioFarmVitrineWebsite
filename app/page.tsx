@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getPoles } from '../lib/db';
 
 const trustPoints = [
@@ -50,31 +51,16 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <aside className="heroPanel heroPanelLanding">
-            <div>
-              <p className="eyebrow">Offre structurée</p>
-              <h2>Une proposition claire et engagée.</h2>
-              <p className="heroPanelText">
-                Produits fermiers, séjours et ateliers conçus pour les projets concrets du territoire.
-              </p>
+          <aside className="heroPanel heroPanelLanding heroPanelLandingImage" aria-label="Visuel principal ADRO BIO FARM">
+            <div className="heroPanelImage heroPanelLandingMedia">
+              <Image
+                src="/green.jpeg"
+                alt="Paysage vert illustrant l'approche agroecologique d'ADRO BIO FARM"
+                fill
+                sizes="(max-width: 900px) 100vw, 42vw"
+                priority
+              />
             </div>
-
-            <div className="heroPanelStats">
-              <div>
-                <strong>3 axes</strong>
-                <span>Produit, accueil, transmission</span>
-              </div>
-              <div>
-                <strong>Action locale</strong>
-                <span>Simple, direct, utile</span>
-              </div>
-            </div>
-
-            <ul className="heroPanelList heroPanelListLanding">
-              <li>Offres structurées par métier</li>
-              <li>Choix rapides, impact durable</li>
-              <li>Commande ou contact direct</li>
-            </ul>
           </aside>
         </div>
       </section>
