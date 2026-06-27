@@ -45,18 +45,13 @@ export default async function ServiceDetailPage({ params }: PageParams) {
 
   return (
     <main>
-      <section className="section hero detailHero">
+      <section className="section hero detailHero serviceDetailHero">
         <div className="container heroContent">
           <div className="heroIntro">
             <span className="detailBadge">{domain?.label ?? service.category}</span>
             <p className="eyebrow">Service</p>
             <h1>{service.title}</h1>
             <p className="intro">{service.description}</p>
-            <div className="heroActions heroActionsCompact">
-              <Link href={`/services?pole=${encodeURIComponent(service.pole)}&domain=${encodeURIComponent(service.domain)}`} className="button secondary small">
-                Voir plus de {domain?.label ?? service.category}
-              </Link>
-            </div>
             {service.methodology.length > 0 && (
               <div className="chips">
                 {service.methodology.slice(0, 3).map((item) => (
@@ -72,14 +67,14 @@ export default async function ServiceDetailPage({ params }: PageParams) {
             </div>
           </div>
 
-          <div className="detailGallery">
+          <div className="detailGallery serviceDetailGallery">
             {service.image ? (
               <Image
                 src={normalizeDbImageSrc(service.image) ?? 'https://placehold.co/900x540/eaf1e1/3b4f35?text=Service'}
                 alt={service.title}
                 width={900}
                 height={540}
-                className="detailImage"
+                className="detailImage serviceDetailImage"
                 unoptimized
               />
             ) : (

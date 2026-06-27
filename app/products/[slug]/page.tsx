@@ -48,18 +48,13 @@ export default async function ProductDetailPage({ params }: PageParams) {
 
   return (
     <main>
-      <section className="section hero detailHero">
+      <section className="section hero detailHero productDetailHero">
         <div className="container heroContent">
           <div className="heroIntro">
             <span className="detailBadge">{domain?.label ?? product.category}</span>
             <p className="eyebrow">Produit</p>
             <h1>{product.title}</h1>
             <p className="intro">{product.description}</p>
-            <div className="heroActions heroActionsCompact">
-              <Link href={`/products?pole=${encodeURIComponent(product.pole)}&domain=${encodeURIComponent(product.domain)}`} className="button secondary small">
-                Voir plus de {domain?.label ?? product.category}
-              </Link>
-            </div>
             {product.features.length > 0 && (
               <div className="chips">
                 {product.features.map((feature) => (
@@ -75,14 +70,14 @@ export default async function ProductDetailPage({ params }: PageParams) {
             </div>
           </div>
 
-          <div className="detailGallery">
+          <div className="detailGallery productDetailGallery">
             {product.image ? (
               <Image
                 src={normalizeDbImageSrc(product.image) ?? 'https://placehold.co/900x540/eaf1e1/3b4f35?text=Produit'}
                 alt={product.title}
                 width={900}
                 height={540}
-                className="detailImage"
+                className="detailImage productDetailImage"
                 unoptimized
               />
             ) : (

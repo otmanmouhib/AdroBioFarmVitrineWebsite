@@ -104,75 +104,135 @@ main {
   color: rgba(80, 122, 47, 0.6);
 }
 
+.globalBackWrap {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0.9rem auto 0;
+}
+
+.globalBackButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(80, 122, 47, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--green-900);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(49, 77, 32, 0.05);
+}
+
+.globalBackButtonIcon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.globalBackButton:hover {
+  border-color: rgba(80, 122, 47, 0.4);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(49, 77, 32, 0.1);
+}
+
+.globalBackButton:hover .globalBackButtonIcon {
+  transform: translateX(-2px);
+}
+
+.globalBackButton:focus-visible {
+  outline: 2px solid var(--green-600);
+  outline-offset: 2px;
+}
+
 @media (min-width: 900px) {
   .breadcrumb {
     display: block;
+  }
+
+  .globalBackWrap {
+    width: min(1120px, calc(100% - 2rem));
+    margin-top: 0.65rem;
   }
 }
 
 .navBar {
   display: grid;
-  gap: 0.6rem;
-  padding: 0.75rem 0;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
 }
 
 .brandRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.75rem;
 }
 
 .brandBlock {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .brand {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 900;
   text-decoration: none;
   color: var(--green-900);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .brandTag {
   margin: 0;
   color: var(--green-700);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.7rem;
+  line-height: 1.3;
   max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .navToggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.8rem;
-  height: 2.8rem;
-  padding: 0.25rem;
-  border: 1px solid rgba(80, 122, 47, 0.22);
-  border-radius: 12px;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.2rem;
+  border: 1px solid rgba(80, 122, 47, 0.2);
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.95);
   color: var(--green-900);
   cursor: pointer;
-  transition: border-color 0.18s ease, background 0.18s ease;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .navToggle:hover {
-  border-color: rgba(80, 122, 47, 0.35);
+  border-color: rgba(80, 122, 47, 0.3);
   background: rgba(255, 255, 255, 1);
+}
+
+.navToggle:focus-visible {
+  outline: 2px solid var(--green-600);
+  outline-offset: -1px;
 }
 
 .navToggle span {
   display: block;
-  width: 1.35rem;
+  width: 1.25rem;
   height: 2px;
-  margin: 0.22rem 0;
+  margin: 0.2rem 0;
   background: var(--green-900);
   border-radius: 999px;
-  transition: transform 0.18s ease, opacity 0.18s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .navToggle.open span:nth-child(1) {
@@ -190,9 +250,11 @@ main {
 .navLinks {
   display: none;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.75rem 0 0;
-  border-top: 1px solid rgba(80, 122, 47, 0.12);
+  gap: 0rem;
+  padding: 0.6rem 0 0.3rem;
+  border-top: 1px solid rgba(80, 122, 47, 0.1);
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 
 .navLinks.active {
@@ -202,99 +264,300 @@ main {
 .navItems {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0rem;
 }
 
 .navGroup {
   display: grid;
-  gap: 0.4rem;
+  gap: 0rem;
+  border-bottom: 1px solid rgba(80, 122, 47, 0.08);
+}
+
+.navGroup:last-child {
+  border-bottom: none;
 }
 
 .navGroupHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.65rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
 }
 
 .navDropdownToggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.6rem;
+  height: 1.6rem;
   border: none;
   border-radius: 6px;
   background: transparent;
   color: var(--green-700);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+}
+
+.navDropdownToggle svg {
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .navDropdownToggle:hover,
 .navDropdownToggle:focus-visible {
-  background: rgba(80, 122, 47, 0.08);
+  background: rgba(80, 122, 47, 0.1);
   color: var(--green-900);
 }
 
 .navDropdownToggle.open {
-  transform: rotate(180deg);
+  transform: none;
   color: var(--green-900);
+  background: rgba(80, 122, 47, 0.08);
+}
+
+.navDropdownToggle.open svg {
+  transform: rotate(180deg);
 }
 
 .navGroupList {
   display: grid;
-  gap: 0.35rem;
-  padding-left: 1rem;
-  margin-top: 0.15rem;
-  border-left: 1px solid rgba(80, 122, 47, 0.1);
+  gap: 0rem;
+  padding: 0.3rem 0 0.3rem 0.8rem;
+  margin-top: 0rem;
+  border-left: 2px solid rgba(80, 122, 47, 0.2);
+}
+
+.navMegaMenu {
+  padding: 1rem 0 0.5rem 0;
+  margin-top: 0.5rem;
+  border-left: none;
+  border-top: 1px solid rgba(80, 122, 47, 0.12);
+  background: transparent;
+}
+
+.navMegaIntro {
+  display: none;
+  gap: 0.6rem;
+  padding: 0.75rem 0 1rem 0;
+  border: none;
+  border-bottom: 1px solid rgba(80, 122, 47, 0.08);
+  margin-bottom: 0.75rem;
+}
+
+.navMegaIntro .eyebrow {
+  color: var(--green-600);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.navMegaIntro h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.navMegaIntro p {
+  margin: 0;
+  color: var(--green-700);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.navMegaAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+  background: var(--green-900);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.78rem;
+  transition: all 0.2s ease;
+}
+
+.navMegaAction:hover,
+.navMegaAction:focus-visible {
+  background: #255018;
+}
+
+.navMegaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.navMegaColumn {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+}
+
+.navMegaHeadingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border: none;
+}
+
+.navMegaHeading {
+  color: var(--green-900);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0;
+  border-radius: 0;
+  transition: color 0.2s ease;
+  flex: 1;
+}
+
+.navMegaHeading:hover,
+.navMegaHeading:focus-visible {
+  color: var(--green-600);
+}
+
+.navMegaHeading.active {
+  color: var(--green-600);
+}
+
+.navMegaToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: none;
+  border-radius: 4px;
+  background: rgba(80, 122, 47, 0.06);
+  color: var(--green-700);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.navMegaToggle svg {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.navMegaToggle:hover,
+.navMegaToggle:focus-visible {
+  background: rgba(80, 122, 47, 0.12);
+  color: var(--green-900);
+}
+
+.navMegaToggle.open {
+  transform: none;
+  color: var(--green-900);
+}
+
+.navMegaToggle.open svg {
+  transform: rotate(180deg);
+}
+
+.navMegaItems {
+  display: grid;
+  gap: 0rem;
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  padding-left: 0.6rem;
+  border-left: 2px solid rgba(80, 122, 47, 0.15);
+}
+
+.navMegaItem {
+  color: var(--green-700);
+  text-decoration: none;
+  font-size: 0.8rem;
+  padding: 0.3rem 0;
+  border-radius: 0;
+  transition: color 0.2s ease;
+  display: block;
+}
+
+.navMegaItem:hover,
+.navMegaItem:focus-visible {
+  color: var(--green-900);
+}
+
+.navMegaItem.active {
+  color: var(--green-900);
+  font-weight: 600;
+}
+
+.navMegaItemAll {
+  font-size: 0.78rem;
+  color: var(--green-700);
+  font-weight: 600;
 }
 
 .navSubLink {
   color: var(--green-700);
   text-decoration: none;
-  font-size: 0.9rem;
-  padding: 0.4rem 0.35rem;
-  border-radius: 999px;
-  transition: background-color 0.18s ease, color 0.18s ease;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 0;
+  transition: all 0.15s ease;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .navSubLink:hover,
 .navSubLink:focus-visible {
-  background: rgba(80, 122, 47, 0.08);
   color: var(--green-900);
+  background: rgba(80, 122, 47, 0.06);
+  padding-left: 0.6rem;
 }
 
 .navSubLink.active {
-  background: rgba(80, 122, 47, 0.12);
   color: var(--green-900);
-  font-weight: 700;
+  font-weight: 600;
+  padding-left: 0.6rem;
 }
 
 .navActions {
   display: flex;
   justify-content: flex-start;
-  margin-top: 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(80, 122, 47, 0.1);
+  gap: 0.5rem;
 }
 
 .navLink {
   color: var(--green-700);
   text-decoration: none;
   font-weight: 600;
-    font-size: 0.88rem;
-    padding: 0.45rem 0;
-    border-bottom: 1px solid rgba(80, 122, 47, 0.08);
-    transition: color 0.18s ease, border-color 0.18s ease;
-    white-space: nowrap;
+  font-size: 0.86rem;
+  padding: 0.5rem 0;
+  border: none;
+  transition: color 0.15s ease;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navLink:hover,
+.navLink:focus-visible {
   color: var(--green-900);
-  border-color: rgba(80, 122, 47, 0.16);
 }
 
 .navLink.active {
   color: var(--green-900);
   font-weight: 700;
-  border-color: var(--green-900);
 }
 
 .navAction,
@@ -340,7 +603,9 @@ main {
   }
 
   .brandTag {
-    display: none;
+    display: block;
+    font-size: 0.75rem;
+    white-space: normal;
   }
 
   .navToggle {
@@ -409,6 +674,31 @@ main {
     z-index: 100;
   }
 
+  .navMegaMenu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) repeat(2, minmax(14rem, 1.2fr));
+    gap: 2.5rem;
+    padding: 2rem 2.25rem;
+    min-width: 38rem;
+    max-width: 65rem;
+    max-height: 36rem;
+    overflow-y: auto;
+    border: none;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(27, 47, 24, 0.08), 0 2px 8px rgba(27, 47, 24, 0.04);
+    border-radius: 16px;
+    z-index: 100;
+    margin-top: 0 !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    border-top: none !important;
+  }
+
   .navGroupList::-webkit-scrollbar {
     width: 0.4rem;
   }
@@ -422,11 +712,25 @@ main {
     background: rgba(80, 122, 47, 0.25);
   }
 
+  .navMegaMenu::-webkit-scrollbar {
+    width: 0.4rem;
+  }
+
+  .navMegaMenu::-webkit-scrollbar-thumb {
+    background: rgba(80, 122, 47, 0.15);
+    border-radius: 999px;
+  }
+
+  .navMegaMenu::-webkit-scrollbar-thumb:hover {
+    background: rgba(80, 122, 47, 0.25);
+  }
+
   .navMegaIntro {
     display: grid;
     gap: 0.75rem;
     padding-right: 2rem;
     border-right: 1px solid rgba(80, 122, 47, 0.12);
+    border-bottom: none;
   }
 
   .navMegaIntro .eyebrow {
@@ -516,6 +820,8 @@ main {
     gap: 0.25rem;
     margin-top: 0.5rem;
     padding-top: 0;
+    border-left: none;
+    padding-left: 0;
   }
 
   .navMegaHeadingRow {
@@ -539,7 +845,11 @@ main {
     color: var(--green-700);
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.9rem;
+    padding: 0;
+  }
+
+  .navMegaToggle svg {
+    transition: transform 0.2s ease, color 0.2s ease;
   }
 
   .navMegaToggle:hover,
@@ -549,8 +859,12 @@ main {
   }
 
   .navMegaToggle.open {
-    transform: rotate(180deg);
+    transform: none;
     color: var(--green-900);
+  }
+
+  .navMegaToggle.open svg {
+    transform: rotate(180deg);
   }
 
   .navMegaItem {
@@ -765,6 +1079,108 @@ main {
   box-shadow: var(--shadow-sm);
 }
 
+.productDetailHero .heroContent {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.productDetailHero .heroIntro {
+  order: 2;
+}
+
+.productDetailGallery {
+  order: 1;
+  width: 100%;
+  border-radius: calc(var(--radius) * 1.1);
+  overflow: hidden;
+  background: white;
+  border: 1px solid rgba(80, 122, 47, 0.12);
+  box-shadow: var(--shadow-sm);
+}
+
+.productDetailImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.productDetailHero .actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.productDetailHero .actions .button,
+.productDetailHero .actions .button.secondary {
+  width: 100%;
+}
+
+@media (min-width: 700px) {
+  .productDetailHero .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .productDetailHero .actions .button,
+  .productDetailHero .actions .button.secondary {
+    width: auto;
+  }
+}
+
+.serviceDetailHero .heroContent {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.serviceDetailHero .heroIntro {
+  order: 2;
+}
+
+.serviceDetailGallery {
+  order: 1;
+  width: 100%;
+  border-radius: calc(var(--radius) * 1.1);
+  overflow: hidden;
+  background: white;
+  border: 1px solid rgba(80, 122, 47, 0.12);
+  box-shadow: var(--shadow-sm);
+}
+
+.serviceDetailImage {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.serviceDetailHero .actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.serviceDetailHero .actions .button,
+.serviceDetailHero .actions .button.secondary {
+  width: 100%;
+}
+
+@media (min-width: 700px) {
+  .serviceDetailHero .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .serviceDetailHero .actions .button,
+  .serviceDetailHero .actions .button.secondary {
+    width: auto;
+  }
+}
+
 .heroPanelImage {
   width: 100%;
   max-width: 100%;
@@ -787,6 +1203,22 @@ main {
     grid-template-columns: minmax(0, 1.15fr) minmax(360px, 1fr);
     align-items: center;
     gap: 2rem;
+  }
+
+  .productDetailHero .heroIntro {
+    order: 1;
+  }
+
+  .productDetailGallery {
+    order: 2;
+  }
+
+  .serviceDetailHero .heroIntro {
+    order: 1;
+  }
+
+  .serviceDetailGallery {
+    order: 2;
   }
 
   .heroPanelImage {

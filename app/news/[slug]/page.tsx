@@ -53,11 +53,6 @@ export default async function NewsPostPage({ params }: PageParams) {
             <div className="heroBadges">
               <span className="heroBadge">Publié le {new Date(post.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
             </div>
-            <div className="heroActions">
-              <Link href="/news" className="button secondary">
-                Retour au journal
-              </Link>
-            </div>
           </div>
 
           <div className="heroPanel">

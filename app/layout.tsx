@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import NavbarServer from './components/NavbarServer';
 import BreadcrumbServer from './components/BreadcrumbServer';
+import GlobalBackButton from './components/GlobalBackButton';
 import Footer from './components/Footer';
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NavbarServer />
           <BreadcrumbServer />
         </Suspense>
+        <GlobalBackButton />
         <Suspense fallback={null}>{children}</Suspense>
         <Footer />
       </body>
