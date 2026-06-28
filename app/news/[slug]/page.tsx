@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { normalizeDbImageSrc } from '../../../lib/image';
 import { getNewsPostBySlug, getNewsPosts } from '../../../lib/db';

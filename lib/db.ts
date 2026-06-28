@@ -1,11 +1,11 @@
 import { getDb } from './mongodb';
 import { enterpriseInfo } from '../data/enterprise';
-import type { Product } from '../data/products';
-import type { Service } from '../data/services';
+import { products as localProducts, type Product } from '../data/products';
+import { services as localServices, type Service } from '../data/services';
 import type { BoutiqueCategory, BoutiqueProduct } from '../data/boutique';
 import { boutiqueCategories as localBoutiqueCategories, boutiqueProducts as localBoutiqueProducts } from '../data/boutique';
-import type { NewsCategory, NewsPost } from '../data/news';
-import type { Pole } from '../data/poles';
+import { newsCategories as localNewsCategories, newsPosts as localNewsPosts, type NewsCategory, type NewsPost } from '../data/news';
+import { poles as localPoles, type Pole } from '../data/poles';
 import type { EnterpriseInfo } from '../data/enterprise';
 
 type ProductDocument = Partial<Product> & {
@@ -93,6 +93,14 @@ function toDateStringValue(value: unknown): string | undefined {
   if (!asString) return undefined;
   const timestamp = Date.parse(asString);
   return Number.isNaN(timestamp) ? undefined : new Date(timestamp).toISOString();
+}
+
+async function withDbFallback<T>(loadFromDb: () => Promise<T>, fallback: () => T | Promise<T>): Promise<T> {
+  try {
+    return await loadFromDb();
+  } catch {
+    return await fallback();
+  }
 }
 
 function mapEnterpriseInfoDocument(doc: EnterpriseInfoDocument | null): EnterpriseInfo {
@@ -233,51 +241,81 @@ function mapNewsPostDocument(doc: NewsPostDocument): NewsPost {
 }
 
 export async function getPoles(): Promise<Pole[]> {
-  const db = await getDb();
-  return db.collection<Pole>('poles').find({}, { projection: { _id: 0 } }).toArray();
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      return db.collection<Pole>('poles').find({}, { projection: { _id: 0 } }).toArray();
+    },
+    () => localPoles,
+  );
 }
 
 export async function getEnterpriseInfo(): Promise<EnterpriseInfo> {
-  const db = await getDb();
-  const collection = db.collection<EnterpriseInfoDocument>('entrepriseInfo');
-  await collection.updateOne(
-    { email: enterpriseInfo.email },
-    { $setOnInsert: enterpriseInfo },
-    { upsert: true },
-  );
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const collection = db.collection<EnterpriseInfoDocument>('entrepriseInfo');
+      await collection.updateOne(
+        { email: enterpriseInfo.email },
+        { $setOnInsert: enterpriseInfo },
+        { upsert: true },
+      );
 
-  const record = await collection.findOne({}, { projection: { _id: 0 } });
-  return mapEnterpriseInfoDocument(record);
+      const record = await collection.findOne({}, { projection: { _id: 0 } });
+      return mapEnterpriseInfoDocument(record);
+    },
+    () => enterpriseInfo,
+  );
 }
 
 export async function getProducts(pole?: string | null, domain?: string | null): Promise<Product[]> {
-  const db = await getDb();
-  const filter: Record<string, unknown> = {};
-  if (pole) filter.pole = pole;
-  if (domain) filter.domain = domain;
-  const docs = await db.collection<ProductDocument>('products').find(filter, { projection: { _id: 0 } }).toArray();
-  return docs.map(mapProductDocument).filter((product) => product.slug.length > 0 && product.title.length > 0);
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const filter: Record<string, unknown> = {};
+      if (pole) filter.pole = pole;
+      if (domain) filter.domain = domain;
+      const docs = await db.collection<ProductDocument>('products').find(filter, { projection: { _id: 0 } }).toArray();
+      return docs.map(mapProductDocument).filter((product) => product.slug.length > 0 && product.title.length > 0);
+    },
+    () => localProducts.filter((product) => (!pole || product.pole === pole) && (!domain || product.domain === domain)),
+  );
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const db = await getDb();
-  const doc = await db.collection<ProductDocument>('products').findOne({ slug }, { projection: { _id: 0 } });
-  return doc ? mapProductDocument(doc) : null;
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const doc = await db.collection<ProductDocument>('products').findOne({ slug }, { projection: { _id: 0 } });
+      return doc ? mapProductDocument(doc) : null;
+    },
+    () => localProducts.find((product) => product.slug === slug) ?? null,
+  );
 }
 
 export async function getServices(pole?: string | null, domain?: string | null): Promise<Service[]> {
-  const db = await getDb();
-  const filter: Record<string, unknown> = {};
-  if (pole) filter.pole = pole;
-  if (domain) filter.domain = domain;
-  const docs = await db.collection<ServiceDocument>('services').find(filter, { projection: { _id: 0 } }).toArray();
-  return docs.map(mapServiceDocument).filter((service) => service.slug.length > 0 && service.title.length > 0);
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const filter: Record<string, unknown> = {};
+      if (pole) filter.pole = pole;
+      if (domain) filter.domain = domain;
+      const docs = await db.collection<ServiceDocument>('services').find(filter, { projection: { _id: 0 } }).toArray();
+      return docs.map(mapServiceDocument).filter((service) => service.slug.length > 0 && service.title.length > 0);
+    },
+    () => localServices.filter((service) => (!pole || service.pole === pole) && (!domain || service.domain === domain)),
+  );
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const db = await getDb();
-  const doc = await db.collection<ServiceDocument>('services').findOne({ slug }, { projection: { _id: 0 } });
-  return doc ? mapServiceDocument(doc) : null;
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const doc = await db.collection<ServiceDocument>('services').findOne({ slug }, { projection: { _id: 0 } });
+      return doc ? mapServiceDocument(doc) : null;
+    },
+    () => localServices.find((service) => service.slug === slug) ?? null,
+  );
 }
 
 export async function getBoutiqueCategories(): Promise<BoutiqueCategory[]> {
@@ -335,23 +373,38 @@ export async function getBoutiqueProductBySlug(slug: string): Promise<BoutiquePr
 }
 
 export async function getNewsPosts(category?: string | null, subcategory?: string | null): Promise<NewsPost[]> {
-  const db = await getDb();
-  const filter: Record<string, unknown> = {};
-  if (category) filter.$or = [{ category }, { categoryId: category }];
-  if (subcategory) filter.subcategory = subcategory;
-  const docs = await db.collection<NewsPostDocument>('news').find(filter, { projection: { _id: 0 } }).toArray();
-  return docs
-    .map(mapNewsPostDocument)
-    .filter((post) => post.slug.length > 0 && post.title.length > 0);
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const filter: Record<string, unknown> = {};
+      if (category) filter.$or = [{ category }, { categoryId: category }];
+      if (subcategory) filter.subcategory = subcategory;
+      const docs = await db.collection<NewsPostDocument>('news').find(filter, { projection: { _id: 0 } }).toArray();
+      return docs
+        .map(mapNewsPostDocument)
+        .filter((post) => post.slug.length > 0 && post.title.length > 0);
+    },
+    () => localNewsPosts.filter((post) => (!category || post.category === category || post.categoryId === category) && (!subcategory || post.subcategory === subcategory)),
+  );
 }
 
 export async function getNewsCategories(): Promise<NewsCategory[]> {
-  const db = await getDb();
-  return db.collection<NewsCategory>('newsCategories').find({}, { projection: { _id: 0 } }).toArray();
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      return db.collection<NewsCategory>('newsCategories').find({}, { projection: { _id: 0 } }).toArray();
+    },
+    () => localNewsCategories,
+  );
 }
 
 export async function getNewsPostBySlug(slug: string): Promise<NewsPost | null> {
-  const db = await getDb();
-  const doc = await db.collection<NewsPostDocument>('news').findOne({ slug }, { projection: { _id: 0 } });
-  return doc ? mapNewsPostDocument(doc) : null;
+  return withDbFallback(
+    async () => {
+      const db = await getDb();
+      const doc = await db.collection<NewsPostDocument>('news').findOne({ slug }, { projection: { _id: 0 } });
+      return doc ? mapNewsPostDocument(doc) : null;
+    },
+    () => localNewsPosts.find((post) => post.slug === slug) ?? null,
+  );
 }

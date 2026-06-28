@@ -3,8 +3,25 @@
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-const CURRENT_ROUTE_KEY = 'abf.currentRoute';
-const PREVIOUS_ROUTE_KEY = 'abf.previousRoute';
+const ROUTE_STACK_KEY = 'abf.routeStack';
+
+function readRouteStack(): string[] {
+  try {
+    const raw = sessionStorage.getItem(ROUTE_STACK_KEY);
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.filter((item): item is string => typeof item === 'string' && item.length > 0);
+  } catch {
+    return [];
+  }
+}
+
+function writeRouteStack(stack: string[]) {
+  sessionStorage.setItem(ROUTE_STACK_KEY, JSON.stringify(stack));
+}
 
 function getFallbackRoute(pathname: string): string {
   if (pathname === '/') return '/';
@@ -26,11 +43,28 @@ export default function GlobalBackButton() {
   const currentRoute = pathname;
 
   useEffect(() => {
-    const previousCurrent = sessionStorage.getItem(CURRENT_ROUTE_KEY);
-    if (previousCurrent && previousCurrent !== currentRoute) {
-      sessionStorage.setItem(PREVIOUS_ROUTE_KEY, previousCurrent);
+    const stack = readRouteStack();
+
+    if (stack.length === 0) {
+      writeRouteStack([currentRoute]);
+      return;
     }
-    sessionStorage.setItem(CURRENT_ROUTE_KEY, currentRoute);
+
+    const lastRoute = stack[stack.length - 1];
+    if (lastRoute === currentRoute) {
+      return;
+    }
+
+    const secondToLastRoute = stack.length > 1 ? stack[stack.length - 2] : null;
+    if (secondToLastRoute === currentRoute) {
+      // Route changed because browser history moved backward.
+      stack.pop();
+      writeRouteStack(stack);
+      return;
+    }
+
+    stack.push(currentRoute);
+    writeRouteStack(stack);
   }, [currentRoute]);
 
   if (pathname === '/') {
@@ -38,10 +72,16 @@ export default function GlobalBackButton() {
   }
 
   function handleGoBack() {
-    const previousRoute = sessionStorage.getItem(PREVIOUS_ROUTE_KEY);
-    if (previousRoute && previousRoute !== currentRoute) {
-      router.push(previousRoute);
-      return;
+    const stack = readRouteStack();
+    if (stack.length > 1) {
+      stack.pop();
+      const targetRoute = stack[stack.length - 1];
+      writeRouteStack(stack);
+
+      if (targetRoute && targetRoute !== currentRoute) {
+        router.push(targetRoute);
+        return;
+      }
     }
 
     const sameOriginReferrer = typeof document !== 'undefined'
